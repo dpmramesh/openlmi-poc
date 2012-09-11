@@ -1,0 +1,24 @@
+
+The Cura Project is based in the following Tools/libraries for 
+CMPI providers development: PyWBEM and konkretcmpi.
+
+PyWBEM is used in the testing tools of cura-networking and cura-providers
+subprojects, and is strongly used in the development of cura-storage implementation.
+
+PyWBEM
+~~~~~~
+
+This python provider interface can run under any CIMON (CIM server) that fully supports
+CMPI provider interface. So you can choose to use either Pegasus [1] or SFCB [2]
+
+[1] https://collaboration.opengroup.org/pegasus/
+[2] http://sourceforge.net/apps/mediawiki/sblim/index.php?title=Sfcb
+
+konkretcmpi
+~~~~~~~~~~~
+
+Tool for rapidly developing CMPI providers in the C programming language.
+
+
+--
+Javi Roman <javiroman@kernel-labs.org>

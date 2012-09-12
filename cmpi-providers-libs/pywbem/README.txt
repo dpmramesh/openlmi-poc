@@ -27,7 +27,7 @@ the MOF file Py_UnixProcess.mof.
 
 2. The second step is compile the MOF file into the CIMON repository.
 
-3. In this example we use SFCB as CIMON, the tools availables for the
+3. In this example we use SFCB as CIMON, the tools available for the
 compilation are: sfcbstage, and sfcbrepos.
 
 4. sfcbstage - Script to copy provider MOF and registration files to the 
@@ -37,8 +37,11 @@ command as root:
 
 	fcbstage -n root/cimv2 Py_UnixProcess.mof
 
-(This command only copy the Py_UnixProcess.mof file in the folder
-/var/lib/sfcb/stage/mofs/root/cimv2/)
+This command only copy the Py_UnixProcess.mof file in the folder
+/var/lib/sfcb/stage/mofs/root/cimv2/. The SFCB MOF compiler, invoked by sfcbstage,
+automatically finds the missing schema elements, and imports them. In this case
+Py_UnixProcess.mof is a derivated class of CIM_UnixProcess, so the file
+/usr/share/sblim-cmpi-base/Linux_Base.mof (???) is imported in the stagin area too.
 
 5. sfcbrepos - rebuilds  the  sfcb  class repository from the staging files. 
 Rebuilding is done offline and the sfcb CIMOM must be restarted for changes 
@@ -48,5 +51,37 @@ to take effect.
 
 6. su -c "systemctl restart sblim-sfcb.service"
 
-7.
+7. Using YAWM, the CIM object browser, we can see the following herarchy:
+
+CIM_Management
+    |
+    `- CIM_ManagedSystemElement
+        |
+        `- CIM_LogicalElement
+    	    |
+    	    `- CIM_EnabledLogicalElement
+    	        |
+    	        `- CIM_Process
+    	            |
+    		    `- CIM_UnixProcess
+    		       |
+                       `- Py_UnixProcess
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

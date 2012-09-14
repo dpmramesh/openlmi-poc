@@ -1,0 +1,41 @@
+// PyTutorial.mof
+class PyTut_Foo
+{
+    [Key, Description("The key for PyTut_Foo")]
+    string FooKey;
+
+    [Description("The value for PyTut_Foo")]
+    sint32 FooValue;
+
+    [Description("Our bogus method")]
+    string FooMethod(
+        [IN(true), OUT(false)]
+        string s,
+
+        [IN(true), OUT(true)]
+        sint32 i,
+
+        [IN(false), OUT(true)]
+        string sa[]);
+};
+
+class PyTut_FooComponent
+{
+    [Key, Description("The key for PyTut_FooComponent")]
+    string FooCompKey;
+
+    [Description("The value for PyTut_FooComponent")]
+    string FooCompValue;
+};
+
+[Association, Description("Relationship between a PyTut_Foo and a "
+    "PyTut_FooComponent")]
+class PyTut_FooAssociation
+{
+        [Key, Description("The PyTut_Foo")]
+        PyTut_Foo REF TheFoo;
+
+        [Key, Description("The PyTut_FooComponent")]
+        PyTut_FooComponent REF TheFooComp;
+};
+

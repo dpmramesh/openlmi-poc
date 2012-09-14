@@ -1,0 +1,10 @@
+class KC_Widget
+{
+	[key]
+    	string Id;
+    	string Color;
+    	uint32 Size;
+
+    	uint32 Add(uint32 X, uint32 Y);
+};
+

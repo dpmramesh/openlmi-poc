@@ -1,0 +1,5 @@
+[PyTut_Foo]
+   provider: /home/sarnoso/HACK/cura-poc.git/cmpi-providers-libs/pywbem/provider-tut/PyTut_FooProvider
+   location: pyCmpiProvider
+   type: instance method
+   namespace: root/cimv2 // TODO

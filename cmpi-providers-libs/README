@@ -1,4 +1,3 @@
-
 The Cura Project is based in the following Tools/libraries for 
 CMPI providers development: PyWBEM and konkretcmpi.
 
@@ -18,6 +17,22 @@ konkretcmpi
 ~~~~~~~~~~~
 
 Tool for rapidly developing CMPI providers in the C programming language.
+
+Components layout
+~~~~~~~~~~~~~~~~~
+
+
+
+                 /usr/sbin/sfcbd [Cim Object Manager, WBEM service]
+			(or even OpenPegasus broker)
+                                     |
+				     |
+              --------------------------------------------
+             /                                            \
+             |                                            |
+       CIM-clients.py                   CIM providers based on PyWbem [cura-storage]
+    (WBEM CIM-XML client using WQL)     CIM providres based on KonkretCMPI [cura-prividers, cura-networking]
+
 
 
 --

@@ -1,0 +1,75 @@
+This is an entry point to CIM instrumentation using 
+the PyWBEM Python provider interface. PyWBEM supports the 
+following provider types:
+
+   Instance provider
+   Method provider
+   Associator provider
+   Life Cycle Indication provider
+   Alert Indication provider
+
+- We need a model so the example providers have something to instrument. 
+The model we are going to work with will be very simple. 
+There will be 2 classes related to one another through
+one association:
+
+PyTut_Foo -(PyTut_FooAssociation)- PyTut_FooComponen
+
+- Now that we have a MOF file, we need to import this into the CIMOM in order
+for the CIMOM to know about the classes we will be instrumenting.
+
+SFCB:
+	sfcbstage -n root/cimv2 PyTutorial.mof
+	sfcbrepos -f
+	systemctl start sblim-sfcb.service
+
+Pegasus:
+	peg-loadmof.sh -n root/cimv2 PyTutorial.mof
+
+- Now that we have imported the MOF and the CIMOM knows something about our
+classes, we can use pywbem to generated the Python
+code we can use as a starting point for our providers.
+
+- ./get-code-skeleton.py
+
+- About PyTut_FooProvider.py skeleton:
+
+Since the PuTut_Foo class had a method defined, the
+Python code that was generated is for an "Instance provider" and "Method provider".
+
+One of the first things we see is the class declaration PyTut_FooProvider.
+Notice that PyTut_FooProvider is derived from the CIMProvider2 class which
+comes from the pywbem.cim_provider2 module. All Instance, Method and Associator
+providers must be derived from this base class.
+
+In order to support the required functionality of an Instance provider the
+following methods must be implemented in PyTut_FooProvider:
+
+enum_instances
+get_instance
+set_instance
+delete_instance
+
+In order to support the required functionality of a Method provider, a method
+with the name "cim_method_" must be implemented. Recall that the
+PyTut_Foo class had a method by the name of "FooMethod". This means that
+"cim_method_foomethod" must be implemented in the PyTut_FooProvider Python
+class.
+
+- Now that we have written the code to instrument the PyTut_Foo class, we need to
+let the CIMOM known about it. Each CIMOM has its own way of registering
+providers. When we generated our provider stub code in section 3.0, we also
+generated the MOF for our provider registration. We saved the MOF to a file
+called PyTut_FooProvider.reg. PyTut_FooProvider.reg contains two sections,
+one for SFCB and one for Pegasus.
+
+
+
+
+
+
+
+
+
+
+

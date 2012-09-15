@@ -1,0 +1,41 @@
+As the manual says there are four ways to use KonkretCMPI:
+
+1. Convenience functions that make working with CMPI easier. 
+2. Default operation functions that implement many of the provider operations
+3. Concrete CIM class interfaces from MOF definitions. It generates headers 
+which contains a C structure definition classes and functions for manipulating 
+the object defined in the MOF structure.
+4. Can generate provider skeletons automatically.
+
+Developers using KonkretCMPI have several advantages
+It generates concrete type-safe C interfaces for manipulating CIM 
+elements. Provides complete default implementations for many provider
+operations. Supplies convenience functions for working with CMPI. It 
+generates the initial CMPI provider skeletons from MOF 
+(Managed Object Format). It builds on CMPI rather than introducing a 
+new provider interface. It does not impose run-time library 
+dependencies. The footprint of the providers produces is small. Also 
+the development effort is greatly reduced. 
+
+
+- Example: Creating a complete CIM Provider skeleton from MOF file.
+
+$ cat Widget.mof
+class KC_Widget
+{
+    	string Id;
+    	string Color;
+    	uint32 Size;
+
+    	uint32 Add(uint32 X, uint32 Y);
+};
+
+
+$ konkret -s KC_Widget -m Widget.mof KC_Widget=Widget
+
+This command generatse the skeleton for all operations
+and methods:
+	Widget.h – contains the Widget class interfaces.
+	WidgetProvider.c – contains the Widget provider skeleton.
+
+

@@ -32,9 +32,33 @@ static CMPIStatus WidgetEnumInstances(
     const CMPIObjectPath* cop,
     const char** properties)
 {
+
+         Widget w;
+     
+         /* Widget.Id="1001" */
+	Widget_Init(&w, _broker, KNameSpace(cop));
+	Widget_Set_Id(&w, "1001");
+	Widget_Set_Color(&w, "Red");
+	Widget_Set_Size(&w, 1);
+	KReturnInstance(result, w);
+     
+	/* Widget.Id="1002" */
+	Widget_Init(&w, _broker, KNameSpace(cop));
+	Widget_Set_Id(&w, "1002");
+	Widget_Set_Color(&w, "Green");
+	Widget_Set_Size(&w, 2);
+	KReturnInstance(result, w);
+
+	/* Widget.Id="1003" */
+	Widget_Init(&w, _broker, KNameSpace(cop));
+	Widget_Set_Id(&w, "1003");
+	Widget_Set_Color(&w, "Blue");
+	Widget_Set_Size(&w, 3); 
+    KReturnInstance(result, w);
+ 
     CMReturn(CMPI_RC_OK);
 }
-
+        
 static CMPIStatus WidgetGetInstance(
     CMPIInstanceMI* mi,
     const CMPIContext* cc,

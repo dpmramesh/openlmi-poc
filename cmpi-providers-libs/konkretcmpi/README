@@ -1,3 +1,6 @@
+This README file is an extract of the oficial manual and other
+sources of information related with konkret tool set.
+
 As the manual says there are four ways to use KonkretCMPI:
 
 1. Convenience functions that make working with CMPI easier. 
@@ -7,18 +10,17 @@ which contains a C structure definition classes and functions for manipulating
 the object defined in the MOF structure.
 4. Can generate provider skeletons automatically.
 
-Developers using KonkretCMPI have several advantages
-It generates concrete type-safe C interfaces for manipulating CIM 
-elements. Provides complete default implementations for many provider
-operations. Supplies convenience functions for working with CMPI. It 
-generates the initial CMPI provider skeletons from MOF 
-(Managed Object Format). It builds on CMPI rather than introducing a 
-new provider interface. It does not impose run-time library 
-dependencies. The footprint of the providers produces is small. Also 
-the development effort is greatly reduced. 
+Developers using KonkretCMPI have several advantages. It generates concrete 
+type-safe C interfaces for manipulating CIM elements. Provides complete 
+default implementations for many provider operations. Supplies convenience 
+functions for working with CMPI. It generates the initial CMPI provider skeletons
+from MOF (Managed Object Format). It builds on CMPI rather than introducing a 
+new provider interface. It does not impose run-time library dependencies. 
+The footprint of the providers produces is small. Also the development effort 
+is greatly reduced. 
 
-
-- Example: Creating a complete CIM Provider skeleton from MOF file.
+Example: Creating a complete CIM Provider skeleton from MOF file.
+~~~~~~~~
 
 $ cat Widget.mof
 class KC_Widget
@@ -33,9 +35,92 @@ class KC_Widget
 
 $ konkret -s KC_Widget -m Widget.mof KC_Widget=Widget
 
-This command generatse the skeleton for all operations
+- This command generates the skeleton for all operations
 and methods:
+
 	Widget.h – contains the Widget class interfaces.
 	WidgetProvider.c – contains the Widget provider skeleton.
+
+- Let's inspect the contents of this files:
+
+Wigdet.h: It containsts three sorts of definitions:
+
+	- Widget structure and associated functions.
+	- The WidgetRef structure and associated functions.
+	- Extrinsic method prototypes and a function for invoking them.
+
+/* classname=KC_Widget */
+typedef struct _Widget
+{
+    KBase __base;
+    /* KC_Widget features */
+    const KString Id;
+    const KString Color;
+    const KUint32 Size;
+}
+Widget;
+
+- All generated structures contain:
+
+	- The private __base field 
+	- One or more fields that either represent CIM properties or CIM references. 
+
+- Properties always have one of the following types:
+
+KBoolean, KUint8, KSint8, KUint16, KSint16, KUint32, KSint32,
+KUint64, KSint64, KReal32, KReal64, KChar16, KString, KDateTime.
+
+Each of these is a structure with the following fields:
+
+exists – indicates whether property exists.
+null – indicates whether property is null.
+value – contains the current value of the property.
+Take for example the KUint32 structure defined below.
+
+     
+     typedef struct _KUint32
+     {
+         CMPIUint32 exists; -> A non-zero field indicates that the field exists or is present.
+         CMPIUint32 null; -> indicates that the given field is null
+         CMPIUint32 value; ->  the value of the property itself.
+     }
+     KUint32;
+
+Thats structures of data types exists because of CMPI providers can form partial instances 
+with only a subset of the properties specified. KonkretCMPI generates special modifier 
+functions for setting these safely. The user must use the modifiers and must never modify 
+these fields directly.  
+
+The skeleton (ready to be filled) makes availables this functions:
+
+static CMPIStatus WidgetCleanup(
+static CMPIStatus WidgetEnumInstanceNames(
+static CMPIStatus WidgetEnumInstances(
+static CMPIStatus WidgetGetInstance(
+static CMPIStatus WidgetCreateInstance(
+static CMPIStatus WidgetModifyInstance(
+static CMPIStatus WidgetDeleteInstance(
+static CMPIStatus WidgetExecQuery(
+static CMPIStatus WidgetMethodCleanup(
+static CMPIStatus WidgetInvokeMethod(
+
+These are some of functions related with the CMPI specification. These are only some of the
+the group functions specified by the standard, functions signatures gruped in:
+
+Instance IM, Association MI, Property MI, Method MI, Indication MI.
+
+Note: In CMPI neutral terminology the CIMON broker is the "Manager Broker (MB)", and the
+CIM Provider is the "Management Instrumentation (MI).
+
+
+
+
+
+
+
+
+
+
+
 
 

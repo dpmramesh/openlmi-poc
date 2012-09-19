@@ -19,6 +19,13 @@ new provider interface. It does not impose run-time library dependencies.
 The footprint of the providers produces is small. Also the development effort 
 is greatly reduced. 
 
+Writing a typical provider module consists of creating two C source files and 
+one C header file.  These files are compiled and built into a single shared 
+object (Linux) that encompasses the functionality of the provider.  The first C 
+source file represents the physical provider.  It contains an entry point into 
+the provider that the CIMOM uses when dynamically loading the provider.  
+Essentially, this class simply creates and returns a new instance of a logical provider.
+
 Example: Creating a complete CIM Provider skeleton from MOF file.
 ~~~~~~~~
 
@@ -93,16 +100,16 @@ these fields directly.
 
 The skeleton (ready to be filled) makes availables this functions:
 
-static CMPIStatus WidgetCleanup(
-static CMPIStatus WidgetEnumInstanceNames(
-static CMPIStatus WidgetEnumInstances(
-static CMPIStatus WidgetGetInstance(
-static CMPIStatus WidgetCreateInstance(
-static CMPIStatus WidgetModifyInstance(
-static CMPIStatus WidgetDeleteInstance(
-static CMPIStatus WidgetExecQuery(
-static CMPIStatus WidgetMethodCleanup(
-static CMPIStatus WidgetInvokeMethod(
+WidgetCleanup
+WidgetEnumInstanceNames
+WidgetEnumInstances
+WidgetGetInstance
+WidgetCreateInstance
+WidgetModifyInstance
+WidgetDeleteInstance
+WidgetExecQuery
+WidgetMethodCleanup
+WidgetInvokeMethod
 
 These are some of functions related with the CMPI specification. These are only some of the
 the group functions specified by the standard, functions signatures gruped in:
@@ -112,15 +119,37 @@ Instance IM, Association MI, Property MI, Method MI, Indication MI.
 Note: In CMPI neutral terminology the CIMON broker is the "Manager Broker (MB)", and the
 CIM Provider is the "Management Instrumentation (MI).
 
+The most of functions are working entities, so we can to complet the development cycle with
+the following steps:
 
+Compiling with CMake:
 
+	$ mkdir build
+	$ cmake ..
+	$ make
 
+Deploying the CIM provider:
 
+	$ cd src 
+	$ su -c "cp libcmpiWidget_Widget.so /usr/lib/cmpi/"
 
+Making the registration file in order to load the provider in the CIMON:
 
+	$ konkretreg libcmpiWidget_Widget.so > libcmpiWidget_Widget.reg
 
+Deploying (registering) the REF and MOF file in SFCB CIMON:
 
+	$ su -c "sfcbstage -r libcmpiWidget_Widget.reg ../../src/Widget.mof"
+	$ su -c "sfcbrepos -f"
 
+Reloading the CIMON:
 
+	$ su -c "systemctl reload-or-try-restart sblim-sfcb.service"
 
+Testing the CIM Provider:
 
+	$ test/test_widget.py 1 2
+	result: 3
+	error: {}
+
+Author: Javi Roman <javiroman@kernel-labs.org>

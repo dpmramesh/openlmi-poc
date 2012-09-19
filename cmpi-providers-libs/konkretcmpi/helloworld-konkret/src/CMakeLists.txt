@@ -1,9 +1,14 @@
-include_directories(.)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 set(PROVIDER_NAME Widget)
 set(LIBRARY_NAME cmpiWidget_${PROVIDER_NAME})
 set(MOF Widget.mof)
 
 set_target_properties(PROPERTIES SOVERSION 0.0.1)
+
+set(provider_SRCS
+	WidgetProvider.c
+)
 
 #konkretcmpi_generate(${MOF}
 #                     CIM_PROVIDERS
@@ -11,7 +16,7 @@ set_target_properties(PROPERTIES SOVERSION 0.0.1)
 #)
 
 add_library(${LIBRARY_NAME} SHARED
-#            ${provider_SRCS}
+            ${provider_SRCS}
             ${CIM_PROVIDERS}
             ${CIM_HEADERS}
 )

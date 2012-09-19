@@ -1,4 +1,8 @@
+/*
+ * Author: Javi Roman <javiroman@kernel-labs.org>
+ */
 #include <konkret/konkret.h>
+#include <strings.h>
 #include "Widget.h"
 
 static const CMPIBroker* _cb = NULL;
@@ -36,25 +40,25 @@ static CMPIStatus WidgetEnumInstances(
          Widget w;
      
          /* Widget.Id="1001" */
-	Widget_Init(&w, _broker, KNameSpace(cop));
+	Widget_Init(&w, _cb, KNameSpace(cop));
 	Widget_Set_Id(&w, "1001");
 	Widget_Set_Color(&w, "Red");
 	Widget_Set_Size(&w, 1);
-	KReturnInstance(result, w);
+	KReturnInstance(cr, w);
      
 	/* Widget.Id="1002" */
-	Widget_Init(&w, _broker, KNameSpace(cop));
+	Widget_Init(&w, _cb, KNameSpace(cop));
 	Widget_Set_Id(&w, "1002");
 	Widget_Set_Color(&w, "Green");
 	Widget_Set_Size(&w, 2);
-	KReturnInstance(result, w);
+	KReturnInstance(cr, w);
 
 	/* Widget.Id="1003" */
-	Widget_Init(&w, _broker, KNameSpace(cop));
+	Widget_Init(&w, _cb, KNameSpace(cop));
 	Widget_Set_Id(&w, "1003");
 	Widget_Set_Color(&w, "Blue");
 	Widget_Set_Size(&w, 3); 
-    KReturnInstance(result, w);
+    KReturnInstance(cr, w);
  
     CMReturn(CMPI_RC_OK);
 }
@@ -155,12 +159,19 @@ KUint32 Widget_Add(
 {
     KUint32 result = KUINT32_INIT;
 
-    KSetStatus(status, ERR_NOT_SUPPORTED);
-    return result;
+         if (!X->exists || !Y->exists || X->null || Y->null)
+         {
+             KSetStatus(status, ERR_INVALID_PARAMETER);
+             return result;
+         }
+     
+         KUint32_Set(&result, X->value + Y->value);
+         KSetStatus(status, OK);
+         return result;
 }
 
 KONKRET_REGISTRATION(
     "root/cimv2",
     "KC_Widget",
     "KC_Widget",
-    "instance method");
+    "instance method")

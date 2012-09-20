@@ -34,6 +34,10 @@ Components layout
     (WBEM CIM-XML client using WQL)     CIM providres based on KonkretCMPI [cura-prividers, cura-networking]
 
 
+SBLIM CIM Client
+~~~~~~~~~~~~~~~~
+
+On the other hand in this folder we've an example of CIM client using the Java library from the SBLIM project.
 
 --
-Javi Roman <javiroman@kernel-labs.org>
+Javi Roman <javiroman(at)kernel-labs.org>

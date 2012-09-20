@@ -1,0 +1,34 @@
+SBLIM CIM Client library (Java library)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is an example about how to produce a code skeleton based on 
+predefined templates using the SBLIM Common Information 
+Model (CIM) Client library (the Java library from SBLIM/IBM project). 
+With CIM, most client-side applications serve as the CIM clients. 
+They use standard CIM XML-over-HTTP protocol for communication with 
+the CIM server. It's inconvenient to encode and decode CIM-XML 
+statements directly. The SBLIM CIM Client gives you standard 
+APIs that can facilitate CIM client development.
+
+The code skeleton makes easier to implement a CIM client application,
+and maintain the application in the future.
+
+The SBLIM CIM Client is a Java implementation of a WBEM services client.
+This library is conform "JSR 48: WBEM Services Specification" [1].
+
+This documentation is based on the original article from IBM DevelopmentWorks [2]
+
+The code skeleton generation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are three steps for generating a code skeleton:
+
+1. Define the code template according to your requirements.
+2. Retrieve the CIM elements definition by mining the CIM server directly 
+   with the SBLIM CIM Client library.
+3. Import the skeleton template and CIM elements information, 
+   and generate an object-oriented code skeleton set for CIM client development.
+
+
+[1] http://www.jcp.org/en/jsr/detail?id=48
+[2] http://www.ibm.com/developerworks/opensource/library/os-sblim-cim/index.html

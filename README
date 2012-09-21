@@ -5,9 +5,8 @@ The aim of this repository is track the Cura Project from http://fedorahosted.or
 
 This Fedora project brings technologies around DMTF standards and initiatives.
 
-
-
-
+The folders are populated of examples in order to understand the DMTF technology in general,
+and the Cura Project in particular.
 
 --
 Javi Roman <javiroman@kernel-labs.org>

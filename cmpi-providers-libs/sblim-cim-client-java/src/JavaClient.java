@@ -49,7 +49,7 @@ public static void main(String args[])
 
 						CIMArgument<?>[] input = new CIMArgument[2];
 						CIMArgument<?>[] output = new CIMArgument[2];
-
+/*
 						input[0] = new CIMArgument("X", new CIMDataType(UINT32), 1);
 						input[1] = new CIMArgument("Y", CIMDataType.UINT32, 1);
 
@@ -62,6 +62,7 @@ public static void main(String args[])
 								System.out.println("Indication generated successfully...");
 						}
 
+*/
 				} catch (WBEMException e) {
 						// Print out the exception that occurred
 						System.out.println(e);

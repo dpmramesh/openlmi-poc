@@ -33,11 +33,21 @@ Components layout
        CIM-clients.py                   CIM providers based on PyWbem [cura-storage]
     (WBEM CIM-XML client using WQL)     CIM providres based on KonkretCMPI [cura-prividers, cura-networking]
 
+The example folders
+~~~~~~~~~~~~~~~~~~
+.
+├── konkretcmpi
+├── pywbem
+└── sblim-cim-client-java
 
-SBLIM CIM Client
-~~~~~~~~~~~~~~~~
+konretcmpi folder: This is an example of CIM Provider built using Konkret library.
 
-On the other hand in this folder we've an example of CIM client using the Java library from the SBLIM project.
+pywbem: The next example only a CIM client using Python and PyWBEM which uses the CIM Provider built in the 
+former example.
+
+sblim-cim-client-java: This is an example using the Java library from SBLIM/IBM project. This example uses
+the CIM provider of the first example.
+
 
 --
-Javi Roman <javiroman(at)kernel-labs.org>
+Javi Roman <javiroman@kernel-labs.org>

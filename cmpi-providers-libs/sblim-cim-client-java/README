@@ -1,0 +1,76 @@
+SBLIM CIM Client library (Java library)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is an example about how to produce a CIM client using 
+the SBLIM Common Information Model (CIM) Client library 
+(the Java library from SBLIM/IBM project). 
+With CIM, most client-side applications serve as the CIM clients. 
+They use standard CIM XML-over-HTTP protocol for communication with 
+the CIM server. It's inconvenient to encode and decode CIM-XML 
+statements directly. The SBLIM CIM Client gives you standard 
+APIs that can facilitate CIM client development.
+
+The SBLIM CIM Client is a Java implementation of a WBEM services client.
+This library is conform "JSR 48: WBEM Services Specification" [1].
+The SBLIM CIM Client for Java is an implementation of a WBEM services 
+client that includes an IETF RFC 2614 [2] compliant SLP client for CIM service discovery. 
+
+The documentation says the current 1.x release stream of the SBLIM CIM Client 
+implements a proprietary API. The effort to standardize the WBEM Java binding 
+with the Java Standardization Request (JSR) 48 is now complete and the JSR48 
+compliant implementation is available in the current 2.x release stream of the SBLIM 
+CIM Client for Java. 
+
+This test was made using Fedora 17. There are two packages with this Java library:
+
+sblim-cim-client-1.3.9.3-2.fc17.noarch
+sblim-cim-client2-2.1.11-1.fc17.noarch
+
+We are using the second one, because of is based on the 2.x API. In particular, the whole
+set of libraries are contained in the JAR file:
+
+/usr/share/java/sblim-cim-client2-2.1.11.jar
+
+So we just need include this library in the class path in order to build or run the Java CIM
+based applications.
+
+The exmaple code 
+~~~~~~~~~~~~~~~~
+
+This CIM client is using the 
+
+
+
+
+Documentation
+~~~~~~~~~~~~~
+
+SBLIM CIM Client for Java - 2.1.12 - Public API Specification [3]
+SBLIM CIM Client for Java - 2.2.0 - Public API Specification [4]
+
+
+
+Build
+~~~~~
+
+This folder uses a experimental CMakeLists.txt file:
+
+$ mkdir build
+$ cmake ..
+$ make
+$ java -classpath .:/usr/share/^Cva/sblim-cim-client2.jar:JavaClient.jar JavaClient
+
+We can build the example manually too:
+
+$ cd src
+$ javac -deprecation -classpath .:/usr/share/java/sblim-cim-client2.jar JavaClient.java
+$ touch manifest
+$ jar cfm JavaClient.jar manifest JavaClient.class
+$ java -classpath .:/usr/share/java/sblim-cim-client2.jar:JavaClient.jar JavaClient
+
+
+
+[1] http://www.jcp.org/en/jsr/detail?id=48
+[2] http://tools.ietf.org/html/rfc2614
+[3] http://sblim.sourceforge.net/cim-client2-v2-doc/
+[4] http://sblim.sourceforge.net/cim-client2-v22-doc/

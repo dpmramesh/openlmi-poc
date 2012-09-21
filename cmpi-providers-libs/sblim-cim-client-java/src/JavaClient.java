@@ -3,8 +3,8 @@
 import javax.security.auth.Subject;
 import java.util.Iterator;
 
-import javax.cim.CIMDataType;
 import javax.cim.CIMClass;
+import javax.cim.CIMDataType;
 import javax.cim.CIMInstance;
 import javax.cim.CIMObjectPath;
 import javax.wbem.WBEMException;
@@ -14,6 +14,9 @@ import javax.wbem.client.UserPrincipal;
 import javax.cim.CIMArgument;
 import javax.wbem.CloseableIterator;
 import javax.cim.CIMInstance;
+import javax.cim.CIMValuedElement;
+import javax.cim.UnsignedInteger32;
+import javax.wbem.listener.IndicationListener;
 
 class JavaClient
 {  
@@ -46,21 +49,28 @@ class JavaClient
 			System.out.print(element + "\n");
 		} 
 
+		// Two inputs arguments to pass to method Add()
 		CIMArgument<?>[] input = new CIMArgument[2];
-		CIMArgument<?>[] output = new CIMArgument[2];
-		/*
-		   input[0] = new CIMArgument("X", new CIMDataType(UINT32), 1);
-		   input[1] = new CIMArgument("Y", CIMDataType.UINT32, 1);
+		// Two output value returns, the addition result and the error code
+		CIMArgument<?>[] output = new CIMArgument[1];
 
-		   Object obj = 
+		CIMDataType d = new CIMDataType(CIMDataType.UINT32, 1);
+		CIMDataType dd = new CIMDataType(CIMDataType.UINT32, 1);
+
+		input[0] = new CIMArgument("X", d, new UnsignedInteger32(1));
+		input[1] = new CIMArgument("Y", dd, new UnsignedInteger32(1));
+	
+		Object obj = 
 		   cli.invokeMethod(new CIMObjectPath("/root/cimv2:KC_Widget"), 
-		   "Add", input, output);
+		   			"Add", input, output);
 
-		   if (obj.toString().equals("0")) {
-		   	System.out.println("Indication generated successfully...");
-		   }
+		if (obj.toString().equals("0")) {
+			System.out.println("Method not invoked successfully!");
+//			Thread.sleep(5000);
+		} else {
+			System.out.println("Method invoked successfully!");
+		}
 
-*/
 	} catch (WBEMException e) {
 		// Print out the exception that occurred
 		System.out.println(e);

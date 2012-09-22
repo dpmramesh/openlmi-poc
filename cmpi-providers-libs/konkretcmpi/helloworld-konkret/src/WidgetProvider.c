@@ -157,17 +157,21 @@ KUint32 Widget_Add(
     const KUint32* Y,
     CMPIStatus* status)
 {
+    printf("Widget_Add method invoked\n");
+
     KUint32 result = KUINT32_INIT;
 
-         if (!X->exists || !Y->exists || X->null || Y->null)
-         {
-             KSetStatus(status, ERR_INVALID_PARAMETER);
-             return result;
-         }
+    if (!X->exists || !Y->exists || X->null || Y->null) {
+        KSetStatus(status, ERR_INVALID_PARAMETER);
+        return result;
+    }
      
-         KUint32_Set(&result, X->value + Y->value);
-         KSetStatus(status, OK);
-         return result;
+    KUint32_Set(&result, X->value + Y->value);
+    KSetStatus(status, OK);
+
+    printf("result: %d\n", result.value);
+
+    return result;
 }
 
 KONKRET_REGISTRATION(
@@ -175,3 +179,5 @@ KONKRET_REGISTRATION(
     "KC_Widget",
     "KC_Widget",
     "instance method")
+
+/* vim: set ts=4 et sw=4 tw=0 sts=4: */

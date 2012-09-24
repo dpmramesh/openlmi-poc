@@ -10,6 +10,6 @@ usage(){
 
 [[ $# -eq 0 ]] && usage
 
-cmd="java -cp ${SBLIMJAR}:${CURAJAR} org.curacli.$1"
+cmd="java -cp ${SBLIMJAR}:${CURAJAR} org.cura.${1,,}.$1"
 echo $cmd; $cmd
 

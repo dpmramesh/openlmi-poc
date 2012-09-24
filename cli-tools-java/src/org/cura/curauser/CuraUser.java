@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-package org.curacli;
+package org.cura.curauser;
 
 import javax.security.auth.Subject;
 import java.util.Iterator;
@@ -34,7 +34,7 @@ import javax.cim.CIMValuedElement;
 import javax.cim.UnsignedInteger32;
 import javax.wbem.listener.IndicationListener;
 
-class CuraService
+class CuraUser
 {  
 	public static void invokeCIMMethod() {
         try {

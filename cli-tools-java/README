@@ -1,0 +1,25 @@
+CLI tools interfacing cura-providers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Cura Project has the following CLI tools for Cura interfacing:
+
+cura-providers/
+    └── cli-tools/
+        ├── cura
+	│   ├── cura_address.py
+	│   ├── cura_client_power.py
+	│   ├── cura_client_service.py
+	│   ├── cura_client_user.py
+	│   ├── cura_options.py
+	│   └── __init__.py
+	├── cura-power.py
+	├── cura-service.py
+	└── cura-user.py
+
+This alpha version of CLI tools is developed using Python and PyWBEM library.
+
+The aim of this branch is to develop the same set of tools using SBLIM Java Client.
+
+
+--
+Javi Roman <javiroman@kernel-labs.org>

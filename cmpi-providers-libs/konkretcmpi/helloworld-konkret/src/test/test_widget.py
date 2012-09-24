@@ -1,11 +1,22 @@
 #!/usr/bin/python
+# Copyright (C) 2012  Javi Roman <javiroman@kernel-labs.org>
 #
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see <http://www.gnu.org/licenses/>.
 # This simple CIM client invokes the Widget CIM Provider. In particular
 # the add() method. 
 #
 # test_widget.py -> SFCB CIMON -> /usr/lib/cmpi/libcmpiWidget_Widget.so 
-# 
-# Author: Javi Roman <javiroman@kernel-labs.org>
 
 import sys
 import pywbem

@@ -8,5 +8,16 @@ This Fedora project brings technologies around DMTF standards and initiatives.
 The folders are populated of examples in order to understand the DMTF technology in general,
 and the Cura Project in particular.
 
+Folders overview:
+
+cura-poc
+|
+├── cli-tools-java --------------> CLI tools from Cura Project using Java laguage.
+└── cmpi-providers-libs ---------> Prove of concept of underlaying libraries used in Cura Project
+    ├── konkretcmpi -------------> Simple C CMPI compliant CIM Provider
+    ├── pywbem ------------------> Simple Python CIM Client 
+    └── sblim-cim-client-java ---> Simple Java CIM Client
+
+
 --
 Javi Roman <javiroman@kernel-labs.org>

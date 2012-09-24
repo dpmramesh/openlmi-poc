@@ -14,6 +14,7 @@
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 package org.cura.curapower;
+package org.cura.curaoptions;
 
 import javax.security.auth.Subject;
 import java.util.Iterator;
@@ -99,7 +100,8 @@ class CuraPower
 
     public static void main(String args[]) {
         System.out.println("CIM Java client");
-        invokeCIMMethod();
+        CuraPowerOptions options = CuraPowerOptions()
+        options.parse(ssssss);
     }
 }
 

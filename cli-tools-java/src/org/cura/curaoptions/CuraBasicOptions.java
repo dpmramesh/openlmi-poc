@@ -3,7 +3,7 @@ package org.cura.curaoptions;
 public class CuraBasicOptions
 {
 	public CuraBasicOptions() {
-		System.out.println("CIM Java client");	
+		System.out.println("<CuraBasicOptions constructor>");	
 	}
 }
 

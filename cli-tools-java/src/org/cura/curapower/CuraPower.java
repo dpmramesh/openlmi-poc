@@ -100,8 +100,8 @@ class CuraPower
 
     public static void main(String args[]) {
         System.out.println("CIM Java client");
-        CuraBasicOptions options = CuraBasicOptions();
-        options.parse(null);
+        CuraBasicOptions options = new CuraBasicOptions();
+        //options.parse(null);
     }
 }
 

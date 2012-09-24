@@ -1,3 +1,5 @@
+# http://www.cmake.org/Bug/view.php?id=7832
+
 # compile a Java file into an object file
 FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/.class")
 

@@ -41,9 +41,7 @@ class CuraPower
         try {
 			WBEMClient cli = WBEMClientFactory.getClient("CIM-XML");
 		    Subject subject = new Subject();
-		    //subject.getPrincipals().add(new UserPrincipal(""));
-            //subject.getPrivateCredentials().add(new PasswordCredential(""));
-            //PasswordCredential password = new PasswordCredential("userPassword");
+
             CIMObjectPath cop = new CIMObjectPath("https", 
                                     "localhost", 
                                     "5989", 
@@ -57,7 +55,8 @@ class CuraPower
 
             cli.initialize(cop, subject, null);
 
-            CloseableIterator itr = cli.execQuery(cop, "select * from KC_Widget", "WQL");
+            CloseableIterator itr = cli.execQuery(cop, 
+                                            "select * from KC_Widget", "WQL");
 
             while(itr.hasNext()) {
                 Object element = itr.next(); 
@@ -105,4 +104,4 @@ class CuraPower
     }
 }
 
-/* vim: set ts=4 et sw=4 tw=0 sts=4: */
+/* vim: set ts=4 et sw=4 tw=0 sts=4 cc=80: */

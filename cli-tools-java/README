@@ -18,7 +18,8 @@ cura-providers/
 
 This alpha version of CLI tools is developed using Python and PyWBEM library.
 
-The aim of this branch is to develop the same set of tools using SBLIM Java Client.
+The aim of this branch is to develop the same set of tools using SBLIM Java 
+Client.
 
 
 --

@@ -1,23 +1,40 @@
 Cura Project prove-of-concept
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The aim of this repository is track the Cura Project from http://fedorahosted.org/cura
+The aim of this repository is track the Cura Project from 
+http://fedorahosted.org/cura
 
 This Fedora project brings technologies around DMTF standards and initiatives.
 
-The folders are populated of examples in order to understand the DMTF technology in general,
-and the Cura Project in particular.
+The folders are populated of examples in order to understand the DMTF 
+technology in general, and the Cura Project in particular.
 
 Folders overview:
 
 cura-poc
 |
-├── cli-tools-java --------------> CLI tools from Cura Project using Java laguage.
-└── cmpi-providers-libs ---------> Prove of concept of underlaying libraries used in Cura Project
+├── cli-tools-java --------------> CLI tools from Cura Project using Java 
+|				   laguage.
+└── cmpi-providers-libs ---------> Prove of concept of underlaying libraries 
+    |				   used in Cura Project
     ├── konkretcmpi -------------> Simple C CMPI compliant CIM Provider
     ├── pywbem ------------------> Simple Python CIM Client 
     └── sblim-cim-client-java ---> Simple Java CIM Client
 
 
+Roadmap:
+
+- CLI tools from Cura Project in Java: The aim of this programming exercise is
+  to get background in order to develop a J2EE frond end usign WBEM technology.
+
+- Condor CMPI Provider: CIM Provider for Condor Scheduler based on cmpi-openpbs
+from SBLIM/IBM implementation [1].
+
+- OpenStack CMPI Provider.
+
+- Kernel tunning CMPI Provider.
+
+
+[1] http://sblim.sourceforge.net/instrumentation.html
 --
 Javi Roman <javiroman@kernel-labs.org>

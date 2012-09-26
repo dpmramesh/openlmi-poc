@@ -19,6 +19,8 @@ import java.io.IOException;
 import javax.security.auth.Subject;
 import java.util.Iterator;
 import java.lang.InterruptedException;
+import java.lang.reflect.*;
+import java.util.*;
 
 import javax.cim.CIMClass;
 import javax.cim.CIMDataType;
@@ -37,13 +39,70 @@ import javax.wbem.listener.IndicationListener;
 
 class CuraPowerClient {
 
+    private final String POWER_CLASS_NAME = "LMI_PowerManagementService";
+    private final int POWER_STATE_SUSPEND = 4;
+    private final int POWER_STATE_FORCE_REBOOT = 5;
+    private final int POWER_STATE_HIBERNATE = 7;
+    private final int POWER_STATE_FORCE_POWEROFF = 8;
+    private final int POWER_STATE_POWEROFF = 12;
+    private final int POWER_STATE_REBOOT = 15;
+
+    private CIMObjectPath cop;
+
     public CuraPowerClient(String hostname,
                                   String username,
                                   String password) {
 
-        System.out.println(hostname);
-        System.out.println(username);
-        System.out.println(password);
+        try {
+            WBEMClient cli = WBEMClientFactory.getClient("CIM-XML");
+            Subject subject = new Subject();
+
+            cop = new CIMObjectPath("https", 
+                                hostname, 
+                                "5989", 
+                                "/root/cimv2",
+                                null,
+                                null);
+            cli.initialize(cop, subject, null);
+
+        } catch (WBEMException e) {
+            System.out.println(e);
+        }
+    }
+
+    public static HashMap<String, Method> getPowerFn() {
+        HashMap<String, Method> powerActions = new HashMap<String, Method>();
+
+        try {
+            powerActions.put("poweroff", 
+                    CuraPowerClient.class.getMethod("poweroff"));
+            powerActions.put("reboot", 
+                    CuraPowerClient.class.getMethod("reboot"));
+            powerActions.put("suspend", 
+                    CuraPowerClient.class.getMethod("suspend"));
+            powerActions.put("hibernate", 
+                    CuraPowerClient.class.getMethod("hibernate"));
+        } catch (NoSuchMethodException e) {
+            System.out.println(e);
+        }
+
+       return powerActions;
+    }
+
+    public static void poweroff() {
+        System.out.println("poweroff method");
+    }
+
+    public static void reboot() {
+        System.out.println("reboot method");
+    }
+
+    public static void suspend() {
+        System.out.println("suspend method");
+    }
+
+    public static void hibernate() {
+        System.out.println("hibernate method");
     }
     
 	public static void invokeCIMMethod() {
@@ -58,11 +117,6 @@ class CuraPowerClient {
                                     null,
                                     null);
 
-            System.out.println(cop.getHost()); 
-            System.out.println(cop.getNamespace()); 
-            System.out.println(cop.getPort()); 
-
-            cli.initialize(cop, subject, null);
 
             CloseableIterator itr = cli.execQuery(cop, 
                                             "select * from KC_Widget", "WQL");

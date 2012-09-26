@@ -17,20 +17,13 @@ package org.cura.curapower;
 
 import org.cura.curapower.CuraPowerClient;
 import org.cura.curaoptions.CuraBasicOptions;
-import java.util.List;
-import java.util.ArrayList;
+import java.lang.reflect.*;
+import java.util.*;
 
 class CuraPower
 {  
     public static void main(String args[]) {
         System.out.println("Cura Power CIM Java client");
-
-        List<String> powerActions = new ArrayList<String>();
-
-        powerActions.add("poweroff");
-        powerActions.add("reboot");
-        powerActions.add("suspend");
-        powerActions.add("hibernate");
 
         CuraBasicOptions options = new CuraBasicOptions();
         options.parse(args);
@@ -38,10 +31,21 @@ class CuraPower
         CuraPowerClient client = new CuraPowerClient(options.hostname, 
                             options.username, 
                             options.password);
+    
+        HashMap<String, Method> powerActions = client.getPowerFn();
 
-        if (!powerActions.contains(options.poweraction)) {
+        if (!powerActions.containsKey(options.poweraction)) {
             System.err.println("No such action to perform!");
-        } 
+            System.exit(1);
+        }
+
+        try {
+            powerActions.get(options.poweraction).invoke(null); 
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            System.out.println(e);
+        }
+
+     
     }
 }
 

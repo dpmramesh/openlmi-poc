@@ -2,6 +2,7 @@
 
 CURAJAR=../build/src/CuraCli.jar
 SBLIMJAR=/usr/share/java/sblim-cim-client2.jar
+ARGSJAR=/usr/share/java/args4j.jar
 
 usage(){
 	echo "Usage: $0 [CuraPower|CuraService|CuraUser" 
@@ -10,6 +11,8 @@ usage(){
 
 [[ $# -eq 0 ]] && usage
 
-cmd="java -cp ${SBLIMJAR}:${CURAJAR} org.cura.${1,,}.$1"
-echo $cmd; $cmd
+CLASS=$1
+shift
+cmd="java -cp ${SBLIMJAR}:${ARGSJAR}:${CURAJAR} org.cura.${CLASS,,}.$CLASS $@"
+$cmd
 

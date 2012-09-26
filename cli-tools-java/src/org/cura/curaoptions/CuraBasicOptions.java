@@ -15,45 +15,62 @@
 
 package org.cura.curaoptions;
 
-public class CuraBasicOptions
-{
-	public CuraBasicOptions() {
-		System.out.println("<CuraBasicOptions constructor>");	
-	}
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+
+class MyOptions {
+    
+    @Option(name = "--help", aliases = "", 
+            usage = "print this message")
+    public boolean help = false;
+
+    @Option(required=true, name="-h", aliases="--hostname", 
+            usage="remote machine hostname", metaVar="HOSTNAME")
+    public String hostname;
+
+    @Option(name="-u", aliases="--username", 
+            usage="remote machine username", metaVar="USERNAME")
+    public String username;
+
+    @Option(name="-p", aliases="--password", 
+            usage="remote machine password", metaVar="PASSWORD")
+    public String password;
 }
 
+public class CuraBasicOptions
+{
+    private CmdLineParser parser;
+    private MyOptions opt;
+    private String s;
 
+    public String hostname;
 
+    public CuraBasicOptions() {
+        opt = new MyOptions();
+        parser = new CmdLineParser(opt);
+    }
 
+    public void parse(String args[]) {
+        try {
+            //for (String s: args) {
+            //    System.out.println(s);
+            //}
+            parser.parseArgument(args);
+            parser.setUsageWidth(80); // width of the error display area
 
+        } catch(CmdLineException e) {
+            System.err.println(e.getMessage());
+            System.err.println("\nExample:\n java -cp " + 
+                "/usr/share/java/sblim-cim-client2.jar:" + 
+                "/usr/share/java/args4j.jar: " + 
+                "CuraCli.jar org.cura.curapower.CuraPower [options]\n");
+            parser.printUsage(System.err);
+            return;
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        hostname = opt.hostname; 
+    }
+}
 
 /* vim: set ts=4 et sw=4 tw=0 sts=4 cc=80: */

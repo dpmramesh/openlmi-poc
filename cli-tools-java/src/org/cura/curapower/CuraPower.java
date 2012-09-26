@@ -16,6 +16,7 @@
 package org.cura.curapower;
 import org.cura.curaoptions.CuraBasicOptions;
 
+import java.io.IOException; 
 import javax.security.auth.Subject;
 import java.util.Iterator;
 import java.lang.InterruptedException;
@@ -97,10 +98,11 @@ class CuraPower
         }
     }
 
-    public static void main(String args[]) {
-        System.out.println("CIM Java client");
+    public static void main(String args[]) throws IOException {
+        System.out.println("Cura Power CIM Java client")
         CuraBasicOptions options = new CuraBasicOptions();
-        //options.parse(null);
+        options.parse(args);
+        System.out.println(options.hostname);
     }
 }
 

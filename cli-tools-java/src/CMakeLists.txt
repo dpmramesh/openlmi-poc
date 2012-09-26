@@ -6,6 +6,7 @@ set(SRC
     org/cura/curaoptions/CuraBasicOptions.java
     org/cura/curaservice/CuraService.java
     org/cura/curapower/CuraPower.java
+    org/cura/curapower/CuraPowerClient.java
     org/cura/curauser/CuraUser.java
 )
 

@@ -22,6 +22,8 @@ import java.util.*;
 
 class CuraPower
 {  
+    private static int client_failed = 0;
+
     public static void main(String args[]) {
         System.out.println("Cura Power CIM Java client");
 
@@ -44,8 +46,17 @@ class CuraPower
         } catch (InvocationTargetException | IllegalAccessException e) {
             System.out.println(e);
         }
+    
+        if (client.retval) {
+            System.out.println("success: " + options.hostname +
+                               " " + options.poweraction);
+        } else {
+            System.err.println("error: " + options.hostname +
+                               " " + options.poweraction);
+            client_failed = 1;
+        }
 
-     
+        System.exit(client_failed);
     }
 }
 

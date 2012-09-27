@@ -34,27 +34,29 @@ import javax.cim.CIMArgument;
 import javax.wbem.CloseableIterator;
 import javax.cim.CIMInstance;
 import javax.cim.CIMValuedElement;
-import javax.cim.UnsignedInteger32;
+import javax.cim.UnsignedInteger16;
 import javax.wbem.listener.IndicationListener;
 
 class CuraPowerClient {
 
-    private final String POWER_CLASS_NAME = "LMI_PowerManagementService";
+    public static boolean retval;
+
+    private final static String POWER_CLASS_NAME = "LMI_PowerManagementService";
     private final int POWER_STATE_SUSPEND = 4;
     private final int POWER_STATE_FORCE_REBOOT = 5;
     private final int POWER_STATE_HIBERNATE = 7;
-    private final int POWER_STATE_FORCE_POWEROFF = 8;
-    private final int POWER_STATE_POWEROFF = 12;
+    private final static int POWER_STATE_FORCE_POWEROFF = 8;
+    private final static int POWER_STATE_POWEROFF = 12;
     private final int POWER_STATE_REBOOT = 15;
-
     private CIMObjectPath cop;
+    private static WBEMClient cli;
 
     public CuraPowerClient(String hostname,
                                   String username,
                                   String password) {
 
         try {
-            WBEMClient cli = WBEMClientFactory.getClient("CIM-XML");
+            cli = WBEMClientFactory.getClient("CIM-XML");
             Subject subject = new Subject();
 
             cop = new CIMObjectPath("https", 
@@ -89,22 +91,53 @@ class CuraPowerClient {
        return powerActions;
     }
 
+    private static CIMObjectPath __getPowerInstance() {
+        CIMObjectPath instance = 
+            new CIMObjectPath("/root/cimv2:" + POWER_CLASS_NAME);
+        System.out.println(instance);
+        return instance;
+    }
+
+    private static void __powerCallMethod(CIMObjectPath instance, 
+                                            String method,
+                                            int input_value) {
+        CIMArgument<?>[] input = new CIMArgument[1];
+        CIMArgument<?>[] output = new CIMArgument[0];
+
+        CIMDataType d = new CIMDataType(CIMDataType.UINT16, 1);
+        input[0] = new CIMArgument("PowerState", d,
+                        new UnsignedInteger16(input_value));
+        try {
+            Object obj = 
+                cli.invokeMethod(instance, method, input, output);
+        } catch(WBEMException e){
+                System.out.println(e);
+        }
+    }
+
     public static void poweroff() {
-        System.out.println("poweroff method");
+        __powerCallMethod(__getPowerInstance(),
+                    "RequestPowerStateChange",
+                    POWER_STATE_POWEROFF);
+        retval = true;
     }
 
     public static void reboot() {
         System.out.println("reboot method");
+        retval = true;
     }
 
     public static void suspend() {
         System.out.println("suspend method");
+        retval = true;
     }
 
     public static void hibernate() {
         System.out.println("hibernate method");
+        retval = true;
     }
     
+/*
 	public static void invokeCIMMethod() {
         try {
 			WBEMClient cli = WBEMClientFactory.getClient("CIM-XML");
@@ -159,6 +192,8 @@ class CuraPowerClient {
             System.out.println(e);
         }
     }
+*/
+
 }
 
 /* vim: set ts=4 et sw=4 tw=0 sts=4 cc=80: */

@@ -42,12 +42,12 @@ class CuraPowerClient {
     public static boolean retval;
 
     private final static String POWER_CLASS_NAME = "LMI_PowerManagementService";
-    private final int POWER_STATE_SUSPEND = 4;
-    private final int POWER_STATE_FORCE_REBOOT = 5;
-    private final int POWER_STATE_HIBERNATE = 7;
+    private final static int POWER_STATE_SUSPEND = 4;
+    private final static int POWER_STATE_FORCE_REBOOT = 5;
+    private final static int POWER_STATE_HIBERNATE = 7;
     private final static int POWER_STATE_FORCE_POWEROFF = 8;
     private final static int POWER_STATE_POWEROFF = 12;
-    private final int POWER_STATE_REBOOT = 15;
+    private final static int POWER_STATE_REBOOT = 15;
     private CIMObjectPath cop;
     private static WBEMClient cli;
 
@@ -110,8 +110,12 @@ class CuraPowerClient {
         try {
             Object obj = 
                 cli.invokeMethod(instance, method, input, output);
+
+                System.out.println("result: " + obj);
+                retval = true;
         } catch(WBEMException e){
                 System.out.println(e);
+                retval = false;
         }
     }
 
@@ -119,81 +123,25 @@ class CuraPowerClient {
         __powerCallMethod(__getPowerInstance(),
                     "RequestPowerStateChange",
                     POWER_STATE_POWEROFF);
-        retval = true;
     }
 
     public static void reboot() {
-        System.out.println("reboot method");
-        retval = true;
+        __powerCallMethod(__getPowerInstance(),
+                    "RequestPowerStateChange",
+                    POWER_STATE_REBOOT);
     }
 
     public static void suspend() {
-        System.out.println("suspend method");
-        retval = true;
+        __powerCallMethod(__getPowerInstance(),
+                    "RequestPowerStateChange",
+                    POWER_STATE_SUSPEND);
     }
 
     public static void hibernate() {
-        System.out.println("hibernate method");
-        retval = true;
+        __powerCallMethod(__getPowerInstance(),
+                    "RequestPowerStateChange",
+                    POWER_STATE_HIBERNATE);
     }
-    
-/*
-	public static void invokeCIMMethod() {
-        try {
-			WBEMClient cli = WBEMClientFactory.getClient("CIM-XML");
-		    Subject subject = new Subject();
-
-            CIMObjectPath cop = new CIMObjectPath("https", 
-                                    "localhost", 
-                                    "5989", 
-                                    "/root/cimv2",
-                                    null,
-                                    null);
-
-
-            CloseableIterator itr = cli.execQuery(cop, 
-                                            "select * from KC_Widget", "WQL");
-
-            while(itr.hasNext()) {
-                Object element = itr.next(); 
-                System.out.print(element + "\n");
-            } 
-
-            // Two inputs arguments to pass to method Add()
-            CIMArgument<?>[] input = new CIMArgument[2];
-            // Two output value returns, the addition result and the error code
-            CIMArgument<?>[] output = new CIMArgument[1];
-
-            CIMDataType d = new CIMDataType(CIMDataType.UINT32, 1);
-            CIMDataType dd = new CIMDataType(CIMDataType.UINT32, 1);
-
-            input[0] = new CIMArgument("X", d, new UnsignedInteger32(7));
-            input[1] = new CIMArgument("Y", dd, new UnsignedInteger32(7));
-	
-            Object obj = 
-                cli.invokeMethod(new CIMObjectPath("/root/cimv2:KC_Widget"), 
-                                 "Add", input, output);
-        
-            try {
-                Thread.sleep(1000);
-
-                if (obj.toString().equals("0")) {
-                    System.out.println("Method not invoked successfully!");
-                } else {
-                    System.out.println("Method invoked successfully!");
-                    System.out.println("result: " + obj);
-                }
-
-            } catch(InterruptedException ie){
-                System.out.println(ie);
-            }
-
-        } catch (WBEMException e) {
-            System.out.println(e);
-        }
-    }
-*/
-
 }
 
 /* vim: set ts=4 et sw=4 tw=0 sts=4 cc=80: */

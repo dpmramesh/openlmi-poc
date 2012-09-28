@@ -5,8 +5,22 @@ Condor is a workload management system for compute-intensive jobs.
 It's an open source HPC/HTC scheduler from e University of Wisconsin-Madison.
 This is the core scheduler from Red Hat Enterprise MRG.
 
-This provider will be based on the implementaion of SBLIM/IBM project of OpenPBS,
-the OpenPBS CIM Model.
+This provider will be based on the implementaion of SBLIM/IBM project of 
+OpenPBS, the OpenPBS CIM Model. OpenPBS is based on PBS propietary software. 
+The original Open Source version released in 1998, and is not actively 
+developed.
+
+Links:
+
+The SBLIM CIM provider for OpenPBS:
+http://sourceforge.net/apps/mediawiki/sblim/index.php?title=ProviderNcsaCoop
+
+The Condor project:
+http://research.cs.wisc.edu/condor/
+
+The OpenPBS project:
+http://www.mcs.anl.gov/research/projects/openpbs/
+
 
 --
 Javi Roman <javiroman@kernel-labs.org>

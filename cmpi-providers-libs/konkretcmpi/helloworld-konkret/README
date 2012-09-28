@@ -13,18 +13,19 @@ the object defined in the MOF structure.
 Developers using KonkretCMPI have several advantages. It generates concrete 
 type-safe C interfaces for manipulating CIM elements. Provides complete 
 default implementations for many provider operations. Supplies convenience 
-functions for working with CMPI. It generates the initial CMPI provider skeletons
-from MOF (Managed Object Format). It builds on CMPI rather than introducing a 
-new provider interface. It does not impose run-time library dependencies. 
-The footprint of the providers produces is small. Also the development effort 
-is greatly reduced. 
+functions for working with CMPI. It generates the initial CMPI provider 
+skeletons from MOF (Managed Object Format). It builds on CMPI rather than 
+introducing a new provider interface. It does not impose run-time library 
+dependencies. The footprint of the providers produces is small. Also the 
+development effort is greatly reduced. 
 
 Writing a typical provider module consists of creating two C source files and 
 one C header file.  These files are compiled and built into a single shared 
 object (Linux) that encompasses the functionality of the provider.  The first C 
 source file represents the physical provider.  It contains an entry point into 
 the provider that the CIMOM uses when dynamically loading the provider.  
-Essentially, this class simply creates and returns a new instance of a logical provider.
+Essentially, this class simply creates and returns a new instance of a logical 
+provider.
 
 Example: Creating a complete CIM Provider skeleton from MOF file.
 ~~~~~~~~
@@ -70,7 +71,8 @@ Widget;
 - All generated structures contain:
 
 	- The private __base field 
-	- One or more fields that either represent CIM properties or CIM references. 
+	- One or more fields that either represent CIM properties or CIM 
+	  references. 
 
 - Properties always have one of the following types:
 
@@ -87,16 +89,17 @@ Take for example the KUint32 structure defined below.
      
      typedef struct _KUint32
      {
-         CMPIUint32 exists; -> A non-zero field indicates that the field exists or is present.
+         CMPIUint32 exists; -> A non-zero field indicates that the field exists
+			       or is present.
          CMPIUint32 null; -> indicates that the given field is null
          CMPIUint32 value; ->  the value of the property itself.
      }
      KUint32;
 
-Thats structures of data types exists because of CMPI providers can form partial instances 
-with only a subset of the properties specified. KonkretCMPI generates special modifier 
-functions for setting these safely. The user must use the modifiers and must never modify 
-these fields directly.  
+Thats structures of data types exists because of CMPI providers can form 
+partial instances with only a subset of the properties specified. KonkretCMPI 
+generates special modifier functions for setting these safely. The user must 
+use the modifiers and must never modify these fields directly.  
 
 The skeleton (ready to be filled) makes availables this functions:
 
@@ -111,16 +114,17 @@ WidgetExecQuery
 WidgetMethodCleanup
 WidgetInvokeMethod
 
-These are some of functions related with the CMPI specification. These are only some of the
-the group functions specified by the standard, functions signatures gruped in:
+These are some of functions related with the CMPI specification. These are 
+only some of the the group functions specified by the standard, functions 
+signatures gruped in:
 
 Instance IM, Association MI, Property MI, Method MI, Indication MI.
 
-Note: In CMPI neutral terminology the CIMON broker is the "Manager Broker (MB)", and the
-CIM Provider is the "Management Instrumentation (MI).
+Note: In CMPI neutral terminology the CIMON broker is the "Manager Broker (MB)"
+, and the CIM Provider is the "Management Instrumentation (MI).
 
-The most of functions are working entities, so we can to complet the development cycle with
-the following steps:
+The most of functions are working entities, so we can to complet the 
+development cycle with the following steps:
 
 Compiling with CMake:
 

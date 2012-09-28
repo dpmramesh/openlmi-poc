@@ -5,9 +5,9 @@ set(CMAKE_JAVA_INCLUDE_PATH /usr/share/java/sblim-cim-client2.jar:/usr/share/jav
 set(SRC
     org/cura/curaoptions/CuraBasicOptions.java
     org/cura/curaservice/CuraService.java
+    org/cura/curaservice/CuraServiceClient.java
     org/cura/curapower/CuraPower.java
     org/cura/curapower/CuraPowerClient.java
-    org/cura/curauser/CuraUser.java
 )
 
 add_jar(CuraCli ${SRC})

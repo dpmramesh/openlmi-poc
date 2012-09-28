@@ -23,7 +23,6 @@ import org.kohsuke.args4j.Argument;
 //import java.util.List;  
 
 class MyOptions {
-    
     @Option(name = "--help", aliases = "", 
             usage = "print this message")
     public boolean help = false;
@@ -40,8 +39,15 @@ class MyOptions {
             usage="remote machine password", metaVar="PASSWORD")
     public String password;
 
-    @Argument  
-    public String poweraction;
+    @Argument
+    public String provideraction;
+
+    public String actions_usage;
+
+    public MyOptions(String usagemsg)
+    {
+        actions_usage = usagemsg;
+    }
 }
 
 public class CuraBasicOptions
@@ -53,10 +59,10 @@ public class CuraBasicOptions
     public String hostname;
     public String username;
     public String password;
-    public String poweraction;
+    public String provideraction;
 
-    public CuraBasicOptions() {
-        opt = new MyOptions();
+    public CuraBasicOptions(String msg) {
+        opt = new MyOptions(msg);
         parser = new CmdLineParser(opt);
     }
 
@@ -73,15 +79,16 @@ public class CuraBasicOptions
             System.err.println("\nExample:\n java -cp " + 
                 "/usr/share/java/sblim-cim-client2.jar:" + 
                 "/usr/share/java/args4j.jar: " + 
-                "CuraCli.jar org.cura.curapower.CuraPower [options]\n");
+                "CuraCli.jar org.cura.curapower.CuraPower [action]\n");
+            System.err.println(opt.actions_usage);
             parser.printUsage(System.err);
-            return;
+            System.exit(1);
         }
 
         hostname = opt.hostname; 
         username = opt.username;
         password = opt.password;
-        poweraction = opt.poweraction;
+        provideraction = opt.provideraction;
     }
 }
 

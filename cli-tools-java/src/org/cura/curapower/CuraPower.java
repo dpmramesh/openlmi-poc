@@ -20,6 +20,15 @@ import org.cura.curaoptions.CuraBasicOptions;
 import java.lang.reflect.*;
 import java.util.*;
 
+class CuraPowerOptions extends CuraBasicOptions 
+{
+       public CuraPowerOptions() {
+            super("Available actions:\n" +
+            "  poweroff, reboot, suspend, hibernate\n" +
+            "  force-poweroff, force-reboot\n");
+    }
+}
+
 class CuraPower
 {  
     private static int client_failed = 0;
@@ -27,7 +36,7 @@ class CuraPower
     public static void main(String args[]) {
         System.out.println("Cura Power CIM Java client");
 
-        CuraBasicOptions options = new CuraBasicOptions();
+        CuraPowerOptions options = new CuraPowerOptions();
         options.parse(args);
 
         CuraPowerClient client = new CuraPowerClient(options.hostname, 
@@ -36,23 +45,23 @@ class CuraPower
     
         HashMap<String, Method> powerActions = client.getPowerFn();
 
-        if (!powerActions.containsKey(options.poweraction)) {
+        if (!powerActions.containsKey(options.provideraction)) {
             System.err.println("No such action to perform!");
             System.exit(1);
         }
 
         try {
-            powerActions.get(options.poweraction).invoke(null); 
+            powerActions.get(options.provideraction).invoke(null); 
         } catch (InvocationTargetException | IllegalAccessException e) {
             System.out.println(e);
         }
     
         if (client.retval) {
             System.out.println("success: " + options.hostname +
-                               " " + options.poweraction);
+                               " " + options.provideraction);
         } else {
             System.err.println("error: " + options.hostname +
-                               " " + options.poweraction);
+                               " " + options.provideraction);
             client_failed = 1;
         }
 

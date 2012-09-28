@@ -106,6 +106,11 @@ class CuraServiceClient {
         return instance;
     }
 
+    private static void __serviceGetProperty() {
+
+
+    }
+
     private static void __serviceCallMethod(CIMObjectPath instance, 
                                             String method) {
         CIMArgument<?>[] input = new CIMArgument[1];

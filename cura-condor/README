@@ -1,0 +1,14 @@
+Cura Provider for Condor
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Condor is a workload management system for compute-intensive jobs. 
+It's an open source HPC/HTC scheduler from e University of Wisconsin-Madison.
+This is the core scheduler from Red Hat Enterprise MRG.
+
+This provider will be based on the implementaion of SBLIM/IBM project of OpenPBS,
+the OpenPBS CIM Model.
+
+--
+Javi Roman <javiroman@kernel-labs.org>
+
+

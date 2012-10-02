@@ -19,8 +19,21 @@ cura-providers/
 This alpha version of CLI tools is developed using Python and PyWBEM library.
 
 The aim of this branch is to develop the same set of tools using SBLIM Java 
-Client.
+Client. The folder schema for Java version:
 
+org/
+└── cura
+    ├── curaoptions
+    │   └── CuraBasicOptions.java
+    ├── curapower
+    │   ├── CuraPowerClient.java
+    │   └── CuraPower.java
+    ├── curaservice
+    │   ├── CuraServiceClient.java
+    │   └── CuraService.java
+    └── curauser
+        ├── CuraUserClient.java
+        └── CuraUser.java
 
 Testing
 ~~~~~~~
@@ -46,7 +59,6 @@ $ cmake ..
 $ make
 $ ../src/run.sh CuraPower -h testhost reboot
 $ ../src/run.sh CuraService -h testhost restart httpd
-
 
 
 

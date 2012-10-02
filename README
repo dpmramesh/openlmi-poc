@@ -29,13 +29,12 @@ Roadmap:
   to get background in order to develop a J2EE frond end usign WBEM technology.
 
 - Condor CMPI Provider: CIM Provider for Condor Scheduler based on cmpi-openpbs
-from SBLIM/IBM implementation [1].
+from SBLIM/IBM implementation.
 
 - OpenStack CMPI Provider.
 
 - Kernel tunning CMPI Provider.
 
 
-[1] http://sblim.sourceforge.net/instrumentation.html
 --
 Javi Roman <javiroman@kernel-labs.org>

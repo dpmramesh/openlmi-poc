@@ -44,21 +44,25 @@ class CuraService
                             options.username, 
                             options.password);
     
+        // Find instance for the service requested.
         client.serviceFind(options.servicename);
 
         HashMap<String, Method> serviceActions = client.getServiceFn();
 
+        // Check for a legal action within the service.
         if (!serviceActions.containsKey(options.provideraction)) {
             System.err.println("No such action to perform!");
             System.exit(1);
         }
 
+        // Call remote method (the action) from received instance.
         try {
             serviceActions.get(options.provideraction).invoke(null); 
         } catch (InvocationTargetException | IllegalAccessException e) {
             System.out.println(e);
         }
     
+        // Method call result check.
         if (client.retval) {
             System.out.println("success: " + options.hostname +
                                " " + options.provideraction);

@@ -27,14 +27,14 @@ import javax.cim.CIMDataType;
 import javax.cim.CIMInstance;
 import javax.cim.CIMProperty;
 import javax.cim.CIMObjectPath;
+import javax.cim.CIMArgument;
+import javax.cim.CIMValuedElement;
+import javax.cim.UnsignedInteger16;
 import javax.wbem.WBEMException;
 import javax.wbem.client.WBEMClient;
 import javax.wbem.client.WBEMClientFactory;
 import javax.wbem.client.UserPrincipal;
-import javax.cim.CIMArgument;
 import javax.wbem.CloseableIterator;
-import javax.cim.CIMValuedElement;
-import javax.cim.UnsignedInteger16;
 import javax.wbem.listener.IndicationListener;
 
 class CuraServiceClient {
@@ -67,10 +67,18 @@ class CuraServiceClient {
         }
     }
 
+    /*
+     * Look for an instance for the service requested. If
+     * success the instance is stored in the public memeber "CIMInstance ins".
+     * This variable is used in the further method call.
+     */
     public void serviceFind(String service_name) {
         ins = __serviceGetInstance(service_name);
     }
 
+    /*
+     * Function calls stored in a map.
+     */
     public static HashMap<String, Method> getServiceFn() {
         HashMap<String, Method> serviceActions = new HashMap<String, Method>();
 
@@ -105,10 +113,16 @@ class CuraServiceClient {
        return serviceActions;
     }
 
+    /*
+     * This method makes the real work of look for a instance
+     * for the service requested (ie. "httpd", "atd" ...). Whether
+     * the service instance exits the instance reference is returned.
+     * Otherwise an error is raised.
+     */
     private static CIMInstance __serviceGetInstance(String s) {
-        //String name = "";
         boolean find = false;
         CIMInstance instance;
+
 		try {
     	    final CloseableIterator<CIMInstance> iterator = 
                 cli.enumerateInstances(
@@ -152,12 +166,6 @@ class CuraServiceClient {
 			e.printStackTrace();
 		}
 
-    /*
-        CIMObjectPath instance = 
-            new CIMObjectPath("/root/cimv2:" + SERVICE_CLASS_NAME, s);
-        System.out.println(instance);
-        return instance;
-    */
 		return null;
     }
 

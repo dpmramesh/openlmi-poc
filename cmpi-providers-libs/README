@@ -42,7 +42,8 @@ The example folders
 .
 ├── konkretcmpi
 ├── pywbem
-└── sblim-cim-client-java
+├── sblim-cim-client-java
+└── sblim-client-java-samples
 
 konretcmpi folder: This is an example of CIM Provider built using 
 Konkret library.
@@ -52,6 +53,12 @@ the CIM Provider built in the former example.
 
 sblim-cim-client-java: This is an example using the Java library from 
 SBLIM/IBM project. This example uses the CIM provider of the first example.
+
+sblim-client-java-samples: The original samples from source distribution of
+sblim java client:
+
+sblim-cim-client2-2.2.0-src/smpl/org/sblim/cimclient/samples/*.*
+
 
 
 --

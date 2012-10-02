@@ -19,8 +19,8 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.Argument;
-//import java.util.ArrayList;  
-//import java.util.List;  
+import java.util.ArrayList;  
+import java.util.List;  
 
 class MyOptions {
     @Option(name = "--help", aliases = "", 
@@ -39,8 +39,11 @@ class MyOptions {
             usage="remote machine password", metaVar="PASSWORD")
     public String password;
 
-    @Argument
+    @Argument(index = 0)
     public String provideraction;
+
+    @Argument(index = 1)
+    public String servicename;
 
     public String actions_usage;
 
@@ -60,6 +63,7 @@ public class CuraBasicOptions
     public String username;
     public String password;
     public String provideraction;
+    public String servicename;
 
     public CuraBasicOptions(String msg) {
         opt = new MyOptions(msg);
@@ -89,6 +93,7 @@ public class CuraBasicOptions
         username = opt.username;
         password = opt.password;
         provideraction = opt.provideraction;
+        servicename = opt.servicename;
     }
 }
 

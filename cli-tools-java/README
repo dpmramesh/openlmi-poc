@@ -22,5 +22,19 @@ The aim of this branch is to develop the same set of tools using SBLIM Java
 Client.
 
 
+Testing
+~~~~~~~
+
+In oder to test/inspect the CIM class/instance hierarchy we are using the 
+following tools:
+
+- YAWN CIM browser:
+	$ yum install yawn 
+	$ elinks http://localhost/yawn 
+
+- WBEM Command Line Interface (wbemcli):
+
+	$ yum install sblim-wbemcli
+	$ wbemcli ein http://testhost:5988/root/cimv2:LMI_Service
 --
 Javi Roman <javiroman@kernel-labs.org>

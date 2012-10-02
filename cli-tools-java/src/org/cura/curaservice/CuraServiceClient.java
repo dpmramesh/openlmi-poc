@@ -25,6 +25,7 @@ import java.util.*;
 import javax.cim.CIMClass;
 import javax.cim.CIMDataType;
 import javax.cim.CIMInstance;
+import javax.cim.CIMProperty;
 import javax.cim.CIMObjectPath;
 import javax.wbem.WBEMException;
 import javax.wbem.client.WBEMClient;
@@ -32,7 +33,6 @@ import javax.wbem.client.WBEMClientFactory;
 import javax.wbem.client.UserPrincipal;
 import javax.cim.CIMArgument;
 import javax.wbem.CloseableIterator;
-import javax.cim.CIMInstance;
 import javax.cim.CIMValuedElement;
 import javax.cim.UnsignedInteger16;
 import javax.wbem.listener.IndicationListener;
@@ -42,8 +42,9 @@ class CuraServiceClient {
     public static boolean retval;
 
     private final static String SERVICE_CLASS_NAME = "LMI_Service";
-    private CIMObjectPath cop;
+    private static CIMObjectPath cop;
     private static WBEMClient cli;
+    private static CIMInstance ins;
 
     public CuraServiceClient(String hostname,
                                   String username,
@@ -66,62 +67,116 @@ class CuraServiceClient {
         }
     }
 
+    public void serviceFind(String service_name) {
+        ins = __serviceGetInstance(service_name);
+    }
+
     public static HashMap<String, Method> getServiceFn() {
         HashMap<String, Method> serviceActions = new HashMap<String, Method>();
 
         try {
             serviceActions.put("start", 
-                    CuraServiceClient.class.getMethod("start"));
+                    CuraServiceClient.class.getMethod("serviceStart"));
             serviceActions.put("stop", 
-                    CuraServiceClient.class.getMethod("stop"));
+                    CuraServiceClient.class.getMethod("serviceStop"));
             serviceActions.put("restart", 
-                    CuraServiceClient.class.getMethod("restart"));
+                    CuraServiceClient.class.getMethod("serviceRestart"));
             serviceActions.put("enable", 
-                    CuraServiceClient.class.getMethod("enable"));
+                    CuraServiceClient.class.getMethod("serviceEnable"));
             serviceActions.put("disable", 
-                    CuraServiceClient.class.getMethod("disable"));
+                    CuraServiceClient.class.getMethod("serviceDisable"));
             serviceActions.put("reload", 
-                    CuraServiceClient.class.getMethod("reload"));
+                    CuraServiceClient.class.getMethod("serviceReload"));
             serviceActions.put("try-restart", 
-                    CuraServiceClient.class.getMethod("tryrestart"));
+                    CuraServiceClient.class.getMethod("serviceTryRestart"));
             serviceActions.put("cond-restart", 
-                    CuraServiceClient.class.getMethod("condrestart"));
+                    CuraServiceClient.class.getMethod("serviceCondRestart"));
             serviceActions.put("reload-or-restart", 
-                    CuraServiceClient.class.getMethod("reloadorrestart"));
+                    CuraServiceClient.class.getMethod("serviceReloadRestart"));
             serviceActions.put("reload-or-try-restart", 
-                    CuraServiceClient.class.getMethod("reloadortryrestart"));
+                    CuraServiceClient.class.getMethod("serviceReloadTryRestart"));
             serviceActions.put("status",
-                    CuraServiceClient.class.getMethod("status"));
+                    CuraServiceClient.class.getMethod("serviceStatus"));
         } catch (NoSuchMethodException e) {
+            System.err.println("error en hashmap");
             System.out.println(e);
         }
 
        return serviceActions;
     }
 
-    private static CIMObjectPath __getServiceInstance() {
+    private static CIMInstance __serviceGetInstance(String s) {
+        //String name = "";
+        boolean find = false;
+        CIMInstance instance;
+		try {
+    	    final CloseableIterator<CIMInstance> iterator = 
+                cli.enumerateInstances(
+			        new CIMObjectPath(null, null, null, 
+                                "root/cimv2", SERVICE_CLASS_NAME, null), 
+                        true, false, false, null);
+        	try {
+				final List<CIMInstance> result = new ArrayList<CIMInstance>();
+				while (iterator.hasNext()) {
+					final CIMInstance tmpinstance = iterator.next();
+                    String name = new 
+                        String(tmpinstance.getProperty("Name").getValue().toString());
+                    if (s.equals(name)) {
+                        System.out.println(tmpinstance);
+                        find = true;
+                        break;
+                    }
+				}
+                if (find) {
+                    System.out.println("service " + s + " match!");
+
+			        CIMProperty<String> nameservice = 
+                        new CIMProperty<String>("Name", CIMDataType.STRING_T,
+					"httpd", true, false, null);
+                    CIMProperty<?>[] properties = new CIMProperty[] { nameservice};
+                    
+		            final CIMObjectPath path = 
+			                new CIMObjectPath(null, null, null, 
+                                "root/cimv2", SERVICE_CLASS_NAME, null, null);
+                    instance = new CIMInstance(path, properties);
+                } else {
+                    System.out.println("No such service " + s + " found!"); 
+				    return null;
+                }
+			} finally {
+				iterator.close();
+            }
+
+            return instance;
+		} catch (final WBEMException e) {
+			e.printStackTrace();
+		}
+
+    /*
         CIMObjectPath instance = 
-            new CIMObjectPath("/root/cimv2:" + SERVICE_CLASS_NAME);
+            new CIMObjectPath("/root/cimv2:" + SERVICE_CLASS_NAME, s);
         System.out.println(instance);
         return instance;
+    */
+		return null;
     }
 
-    private static void __serviceGetProperty() {
-
-
-    }
-
-    private static void __serviceCallMethod(CIMObjectPath instance, 
+    private static int __serviceGetProperty(CIMInstance instance,
                                             String method) {
-        CIMArgument<?>[] input = new CIMArgument[1];
+        System.out.println("status -> ...");
+        return 0;
+    }
+
+    private static void __serviceCallMethod(CIMInstance instance, 
+                                            String method) {
+
+        CIMArgument<?>[] input = new CIMArgument[0];
         CIMArgument<?>[] output = new CIMArgument[0];
 
-        CIMDataType d = new CIMDataType(CIMDataType.UINT16, 1);
-        //input[0] = new CIMArgument("ServiceState", d,
-         //               new UnsignedInteger16(input_value));
         try {
             Object obj = 
-                cli.invokeMethod(instance, method, input, output);
+                cli.invokeMethod(instance.getObjectPath(), 
+                                 method, input, output);
 
                 System.out.println("result: " + obj);
                 retval = true;
@@ -131,48 +186,48 @@ class CuraServiceClient {
         }
     }
 
-    public static void start() {
-        __serviceCallMethod(__getServiceInstance(), "StartService");
+    public static void serviceStart() {
+        __serviceCallMethod(ins, "StartService");
     }
 
-    public static void stop() {
-        __serviceCallMethod(__getServiceInstance(), "StopService");
+    public static void serviceStop() {
+        __serviceCallMethod(ins, "StopService");
     }
 
-    public static void restart() {
-        __serviceCallMethod(__getServiceInstance(), "RestartService");
+    public static void serviceRestart() {
+        __serviceCallMethod(ins, "RestartService");
     }
 
-    public static void enable() {
-        __serviceCallMethod(__getServiceInstance(), "TurnServiceOn");
+    public static void serviceEnable() {
+        __serviceCallMethod(ins, "TurnServiceOn");
     }
 
-    public static void disable() {
-        __serviceCallMethod(__getServiceInstance(), "iTurnServiceOff");
+    public static void serviceDisable() {
+        __serviceCallMethod(ins, "TurnServiceOff");
     }
 
-    public static void reload() {
-        __serviceCallMethod(__getServiceInstance(), "ReloadService");
+    public static void serviceReload() {
+        __serviceCallMethod(ins, "ReloadService");
     }
 
-    public static void tryrestart() {
-        __serviceCallMethod(__getServiceInstance(), "TryRestartService");
+    public static void serviceTryRestart() {
+        __serviceCallMethod(ins, "TryRestartService");
     }
 
-    public static void condrestart() {
-        __serviceCallMethod(__getServiceInstance(), "CondRestartService");
+    public static void serviceCondRestart() {
+        __serviceCallMethod(ins, "CondRestartService");
     }
 
-    public static void reloadorrestart() {
-        __serviceCallMethod(__getServiceInstance(), "ReloadOrRestartService");
+    public static void serviceReloadRestart() {
+        __serviceCallMethod(ins, "ReloadOrRestartService");
     }
 
-    public static void reloadortryrestart() {
-        __serviceCallMethod(__getServiceInstance(), "ReloadOrTryRestartService");
+    public static void serviceReloadTryRestart() {
+        __serviceCallMethod(ins, "ReloadOrTryRestartService");
     }
 
-    public static void status() {
-        __serviceCallMethod(__getServiceInstance(), "Status");
+    public static void serviceStatus() {
+       __serviceGetProperty(ins, "Status");
     }
 }
 

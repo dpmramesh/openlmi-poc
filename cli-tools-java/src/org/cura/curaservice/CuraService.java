@@ -44,6 +44,8 @@ class CuraService
                             options.username, 
                             options.password);
     
+        client.serviceFind(options.servicename);
+
         HashMap<String, Method> serviceActions = client.getServiceFn();
 
         if (!serviceActions.containsKey(options.provideraction)) {

@@ -13,8 +13,9 @@ Folders overview:
 
 cura-poc
 |
-├── cli-tools-java --------------> CLI tools from Cura Project using Java 
-|				   laguage.
+├── cli-tools-java --------------> CLI tools from Cura Project using Java
+├── cura-condor -----------------> Condor Cura CIM provider
+├── cura-openstack --------------> OpenStack Cura CIM provider
 └── cmpi-providers-libs ---------> Prove of concept of underlaying libraries 
     |				   used in Cura Project
     ├── konkretcmpi -------------> Simple C CMPI compliant CIM Provider

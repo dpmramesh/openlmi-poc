@@ -36,5 +36,20 @@ following tools:
 
 	$ yum install sblim-wbemcli
 	$ wbemcli ein http://testhost:5988/root/cimv2:LMI_Service
+
+Running cli java tools
+~~~~~~~~~~~~~~~~~~~~~~
+
+$ cd cli-tools-java
+$ mkdir build && cd build
+$ cmake ..
+$ make
+$ ../src/run.sh CuraPower -h testhost reboot
+$ ../src/run.sh CuraService -h testhost restart httpd
+
+
+
+
+
 --
 Javi Roman <javiroman@kernel-labs.org>

@@ -1,0 +1,48 @@
+Notes from DASH standard and Intel AMT techology
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+wsman get  \
+	http://intel.com/wbem/wscim/1/ips-schema/1/IPS_KVMRedirectionSettingData \
+			 -h talos -P 16992
+
+wsman invoke -a \
+	RequestStateChange \
+	http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WakeUpServiceOnNetworkPort \
+	-h talos -P 16992 -k RequestedStated=2
+
+wsman enumerate -h talos -P 16992 http://schemas.dmtf.org/wbem/wscim/1/*
+
+Part of the DMTF WS-Management specification:
+
+$ wsman identify -h talos -P 16992
+
+- PC Needs to be woken up remotely on a wired network (DSP2014_1.1.0.pdf)
+
+PCs that have Wake On LAN configured will awake on receipt of the Magic Packet. 
+DASH pro- vides a similar capability through the Out Of Band DASH Service. An 
+administrator, using a SOAP client program which perhaps has been extended 
+for DASH, formulates a query to locate the computer systems at a Management 
+Access Point accessible through a WS-Management Service transport address. 
+If the target computer is located, the Administrator fetches the associated 
+CIM_PowerManagementCapabilities instance, and examines the 
+PowerChangeCapabilities and property. 
+
+If the computer supports setting its enabled state to 2 (enabled), the 
+Administrator executes the extrinsic method RequestStateChange() on the 
+computer instance.  
+
+- Enumerate classes:
+
+From the class list in http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/ 
+we can enumerate with:
+
+wsman enumerate \
+	-h talos -P 16992 \
+	http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/[???]
+
+Example:
+
+wsman enumerate \
+	-h talos -P 16992 \
+	http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementCapabilities
+

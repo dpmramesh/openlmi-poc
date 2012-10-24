@@ -1,5 +1,5 @@
 OpenLMI Provider for Condor
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Condor is a workload management system for compute-intensive jobs. 
 It's an open source HPC/HTC scheduler from e University of Wisconsin-Madison.
@@ -23,6 +23,14 @@ http://research.cs.wisc.edu/condor/
 The OpenPBS project:
 http://www.mcs.anl.gov/research/projects/openpbs/
 
+
+Roadmap
+~~~~~~~
+
+The first prototype is developed in Python and SOAP Condor API for RAD.
+
+
+J2EE -> Python CIM provider -> API SOAP -> Condor
 
 --
 Javi Roman <javiroman@kernel-labs.org>

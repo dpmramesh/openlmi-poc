@@ -5,7 +5,7 @@ SBLIMJAR=/usr/share/java/sblim-cim-client2.jar
 ARGSJAR=/usr/share/java/args4j.jar
 
 usage(){
-	echo "Usage: $0 [CuraPower|CuraService|CuraUser" 
+	echo "Usage: $0 [OpenLMIPower|OpenLMIService|OpenLMIUser" 
 	exit 1
 }
 
@@ -13,6 +13,6 @@ usage(){
 
 CLASS=$1
 shift
-cmd="java -cp ${SBLIMJAR}:${ARGSJAR}:${CURAJAR} org.cura.${CLASS,,}.$CLASS $@"
+cmd="java -cp ${SBLIMJAR}:${ARGSJAR}:${CURAJAR} org.openlmi.${CLASS,,}.$CLASS $@"
 $cmd
 

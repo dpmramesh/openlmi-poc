@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-package org.cura.curaservice;
+package org.openlmi.openlmiservice;
 
 import java.io.IOException; 
 import javax.security.auth.Subject;
@@ -37,7 +37,7 @@ import javax.wbem.client.UserPrincipal;
 import javax.wbem.CloseableIterator;
 import javax.wbem.listener.IndicationListener;
 
-class CuraServiceClient {
+class OpenLMIServiceClient {
 
     public static boolean retval;
 
@@ -46,7 +46,7 @@ class CuraServiceClient {
     private static WBEMClient cli;
     private static CIMInstance ins;
 
-    public CuraServiceClient(String hostname,
+    public OpenLMIServiceClient(String hostname,
                                   String username,
                                   String password) {
 
@@ -84,27 +84,27 @@ class CuraServiceClient {
 
         try {
             serviceActions.put("start", 
-                    CuraServiceClient.class.getMethod("serviceStart"));
+                    OpenLMIServiceClient.class.getMethod("serviceStart"));
             serviceActions.put("stop", 
-                    CuraServiceClient.class.getMethod("serviceStop"));
+                    OpenLMIServiceClient.class.getMethod("serviceStop"));
             serviceActions.put("restart", 
-                    CuraServiceClient.class.getMethod("serviceRestart"));
+                    OpenLMIServiceClient.class.getMethod("serviceRestart"));
             serviceActions.put("enable", 
-                    CuraServiceClient.class.getMethod("serviceEnable"));
+                    OpenLMIServiceClient.class.getMethod("serviceEnable"));
             serviceActions.put("disable", 
-                    CuraServiceClient.class.getMethod("serviceDisable"));
+                    OpenLMIServiceClient.class.getMethod("serviceDisable"));
             serviceActions.put("reload", 
-                    CuraServiceClient.class.getMethod("serviceReload"));
+                    OpenLMIServiceClient.class.getMethod("serviceReload"));
             serviceActions.put("try-restart", 
-                    CuraServiceClient.class.getMethod("serviceTryRestart"));
+                    OpenLMIServiceClient.class.getMethod("serviceTryRestart"));
             serviceActions.put("cond-restart", 
-                    CuraServiceClient.class.getMethod("serviceCondRestart"));
+                    OpenLMIServiceClient.class.getMethod("serviceCondRestart"));
             serviceActions.put("reload-or-restart", 
-                    CuraServiceClient.class.getMethod("serviceReloadRestart"));
+                    OpenLMIServiceClient.class.getMethod("serviceReloadRestart"));
             serviceActions.put("reload-or-try-restart", 
-                    CuraServiceClient.class.getMethod("serviceReloadTryRestart"));
+                    OpenLMIServiceClient.class.getMethod("serviceReloadTryRestart"));
             serviceActions.put("status",
-                    CuraServiceClient.class.getMethod("serviceStatus"));
+                    OpenLMIServiceClient.class.getMethod("serviceStatus"));
         } catch (NoSuchMethodException e) {
             System.err.println("error en hashmap");
             System.out.println(e);

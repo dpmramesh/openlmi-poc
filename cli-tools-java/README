@@ -1,7 +1,7 @@
-CLI tools interfacing cura-providers
+CLI tools interfacing openlmi-providers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The Cura Project has the following CLI tools for Cura interfacing:
+The OpenLMI Project has the following CLI tools for OpenLMI interfacing:
 
 cura-providers/
     └── cli-tools/
@@ -22,18 +22,18 @@ The aim of this branch is to develop the same set of tools using SBLIM Java
 Client. The folder schema for Java version:
 
 org/
-└── cura
-    ├── curaoptions
-    │   └── CuraBasicOptions.java
-    ├── curapower
-    │   ├── CuraPowerClient.java
-    │   └── CuraPower.java
-    ├── curaservice
-    │   ├── CuraServiceClient.java
-    │   └── CuraService.java
-    └── curauser
-        ├── CuraUserClient.java
-        └── CuraUser.java
+└── openlmi
+    ├── openlmioptions
+    │   └── OpenLMIBasicOptions.java
+    ├── openlmipower
+    │   ├── OpenLMIPowerClient.java
+    │   └── OpenLMIPower.java
+    ├── openlmiservice
+    │   ├── OpenLMIServiceClient.java
+    │   └── OpenLMIService.java
+    └── openlmiauser
+        ├── OpenLMIUserClient.java
+        └── OpenLMIUser.java
 
 Testing
 ~~~~~~~
@@ -57,8 +57,8 @@ $ cd cli-tools-java
 $ mkdir build && cd build
 $ cmake ..
 $ make
-$ ../src/run.sh CuraPower -h testhost reboot
-$ ../src/run.sh CuraService -h testhost restart httpd
+$ ../src/run.sh OpenLMIPower -h testhost reboot
+$ ../src/run.sh OpenLMIService -h testhost restart httpd
 
 
 

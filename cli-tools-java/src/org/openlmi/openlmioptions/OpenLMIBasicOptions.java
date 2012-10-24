@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-package org.cura.curaoptions;
+package org.openlmi.openlmioptions;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -53,7 +53,7 @@ class MyOptions {
     }
 }
 
-public class CuraBasicOptions
+public class OpenLMIBasicOptions
 {
     private CmdLineParser parser;
     private MyOptions opt;
@@ -65,7 +65,7 @@ public class CuraBasicOptions
     public String provideraction;
     public String servicename;
 
-    public CuraBasicOptions(String msg) {
+    public OpenLMIBasicOptions(String msg) {
         opt = new MyOptions(msg);
         parser = new CmdLineParser(opt);
     }
@@ -83,7 +83,7 @@ public class CuraBasicOptions
             System.err.println("\nExample:\n java -cp " + 
                 "/usr/share/java/sblim-cim-client2.jar:" + 
                 "/usr/share/java/args4j.jar: " + 
-                "CuraCli.jar org.cura.curapower.CuraPower [action]\n");
+                "OpenLMICli.jar org.openlmi.openlmipower.OpenLMIPower [action]\n");
             System.err.println(opt.actions_usage);
             parser.printUsage(System.err);
             System.exit(1);

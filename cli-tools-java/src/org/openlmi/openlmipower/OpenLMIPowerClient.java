@@ -37,7 +37,7 @@ import javax.cim.CIMValuedElement;
 import javax.cim.UnsignedInteger16;
 import javax.wbem.listener.IndicationListener;
 
-class CuraPowerClient {
+class OpenLMIPowerClient {
 
     public static boolean retval;
 
@@ -51,7 +51,7 @@ class CuraPowerClient {
     private CIMObjectPath cop;
     private static WBEMClient cli;
 
-    public CuraPowerClient(String hostname,
+    public OpenLMIPowerClient(String hostname,
                                   String username,
                                   String password) {
 
@@ -77,13 +77,13 @@ class CuraPowerClient {
 
         try {
             powerActions.put("poweroff", 
-                    CuraPowerClient.class.getMethod("poweroff"));
+                    OpenLMIPowerClient.class.getMethod("poweroff"));
             powerActions.put("reboot", 
-                    CuraPowerClient.class.getMethod("reboot"));
+                    OpenLMIPowerClient.class.getMethod("reboot"));
             powerActions.put("suspend", 
-                    CuraPowerClient.class.getMethod("suspend"));
+                    OpenLMIPowerClient.class.getMethod("suspend"));
             powerActions.put("hibernate", 
-                    CuraPowerClient.class.getMethod("hibernate"));
+                    OpenLMIPowerClient.class.getMethod("hibernate"));
         } catch (NoSuchMethodException e) {
             System.out.println(e);
         }

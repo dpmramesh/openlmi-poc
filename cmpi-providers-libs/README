@@ -1,8 +1,8 @@
 The Cura Project is based in the following Tools/libraries for 
 CMPI providers development: PyWBEM and konkretcmpi.
 
-PyWBEM is used in the testing tools of cura-networking and cura-providers
-subprojects, and is strongly used in the development of cura-storage 
+PyWBEM is used in the testing tools of openlmi-networking and openlmi-providers
+subprojects, and is strongly used in the development of openlmi-storage 
 implementation.
 
 PyWBEM
@@ -33,9 +33,9 @@ Components layout
              /                                            \
              |                                            |
        CIM-clients.py                   CIM providers based on PyWbem 
-(WBEM CIM-XML client using WQL)		      [cura-storage]
+(WBEM CIM-XML client using WQL)		      [openlmi-storage]
                                      CIM providres based on KonkretCMPI 
-				     [cura-prividers, cura-networking]
+				     [openlmi-prividers, openlmi-networking]
 
 The example folders
 ~~~~~~~~~~~~~~~~~~

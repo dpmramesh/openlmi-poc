@@ -13,49 +13,56 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, see <http://www.gnu.org/licenses/>.
 
-package org.cura.curapower;
+package org.openlmi.openlmiservice;
 
-import org.cura.curapower.CuraPowerClient;
-import org.cura.curaoptions.CuraBasicOptions;
+import org.openlmi.openlmiservice.CuraServiceClient;
+import org.openlmi.openlmioptions.OpenLMIBasicOptions;
 import java.lang.reflect.*;
 import java.util.*;
 
-class CuraPowerOptions extends CuraBasicOptions 
+class OpenLMIServiceOptions extends OpenLMIBasicOptions 
 {
-       public CuraPowerOptions() {
+       public OpenLMIServiceOptions() {
             super("Available actions:\n" +
-            "  poweroff, reboot, suspend, hibernate\n" +
-            "  force-poweroff, force-reboot\n");
+            "  start, stop, restart, enable, disable, reload,\n" +
+            "  try-restart, cond-restart, reload-or-restart,\n" +
+            "  reload-or-try-restart, status\n");
     }
 }
 
-class CuraPower
+class OpenLMIService
 {  
     private static int client_failed = 0;
 
     public static void main(String args[]) {
-        System.out.println("Cura Power CIM Java client");
+        System.out.println("OpenLMI Service CIM Java client");
 
-        CuraPowerOptions options = new CuraPowerOptions();
+        OpenLMIServiceOptions options = new OpenLMIServiceOptions();
         options.parse(args);
 
-        CuraPowerClient client = new CuraPowerClient(options.hostname, 
+        OpenLMIServiceClient client = new OpenLMIServiceClient(options.hostname, 
                             options.username, 
                             options.password);
     
-        HashMap<String, Method> powerActions = client.getPowerFn();
+        // Find instance for the service requested.
+        client.serviceFind(options.servicename);
 
-        if (!powerActions.containsKey(options.provideraction)) {
+        HashMap<String, Method> serviceActions = client.getServiceFn();
+
+        // Check for a legal action within the service.
+        if (!serviceActions.containsKey(options.provideraction)) {
             System.err.println("No such action to perform!");
             System.exit(1);
         }
 
+        // Call remote method (the action) from received instance.
         try {
-            powerActions.get(options.provideraction).invoke(null); 
+            serviceActions.get(options.provideraction).invoke(null); 
         } catch (InvocationTargetException | IllegalAccessException e) {
             System.out.println(e);
         }
     
+        // Method call result check.
         if (client.retval) {
             System.out.println("success: " + options.hostname +
                                " " + options.provideraction);

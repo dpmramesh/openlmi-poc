@@ -1,0 +1,15 @@
+"No existe el port-type BES Factory, solo existe el servicio BES
+ por tanto derivamos del tipo base y creamos el port-type"
+class LMI_BasicExecutionServiceCondorFactory: CIM_BasicExecutionService {
+};
+
+"No existe en el CIM model actual el modelado de este tipo, por
+tanto derivamos de la clase fundamental y lo creamos nosotros segun 
+la especificacion indica"
+class LMI_BasicExecutionServiceCondorManagement: LMI_BasicExecutionServiceManagement {
+};
+
+"Creamos el otro port-type propuesto por la especificacion OGSA/BES"
+class LMI_BasicExecutionServiceCondorManagement: CIM_Service {
+};
+

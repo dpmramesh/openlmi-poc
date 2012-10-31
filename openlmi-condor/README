@@ -32,6 +32,9 @@ The first prototype is developed in Python and SOAP Condor API for RAD.
 
 J2EE -> Python CIM provider -> API SOAP -> Condor
 
+
+J2EE -> OGSA/BES CIM schema -> OpenLMI Provider -> SOAP API -> Condor Batch Scheduler
+
 --
 Javi Roman <javiroman@kernel-labs.org>
 

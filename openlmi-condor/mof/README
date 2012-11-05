@@ -1,0 +1,27 @@
+CIM schema hierarchy based on CIM v2.34.0+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+CIM_ManagedElement
+|
+`- CIM_ManagedSystemElement
+   |
+   `- CIM_LogicalElement
+      |
+      `- CIM_EnabledLogicalElement
+         |
+         `- CIM_Service
+            |
+            |- CIM_BasicExecutionService
+            |  |
+            |   `- LMI_BasicExecutionServiceCondorFactory
+            |
+            `- LMI_BasicExecutionServiceManagement
+               |
+               `- LMI_BasicExecutionServiceCondorManagement
+
+Only CIM_BasicExecutionService is defined in the last CIM schema
+(v2.34.0+), and this one defines the "BasicExecutionService Factory" 
+port-type. The "BasicExecutionService Management" port-type is not
+defined in the current schema, so we have to define one.
+
+

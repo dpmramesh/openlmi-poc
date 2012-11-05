@@ -1,0 +1,33 @@
+
+// SFCB Provider registration for LMI_BasicExecutionServiceCondorManagement
+[LMI_BasicExecutionServiceCondorManagement]
+   provider: LMI_BasicExecutionServiceCondorManagement
+   location: pyCmpiProvider
+   type: instance method
+   namespace: root/cimv2 // TODO
+
+// Pegasus Provider registration for LMI_BasicExecutionServiceCondorManagement
+instance of PG_ProviderModule
+{
+    Name = "pyCmpiProvider_LMI_BasicExecutionServiceCondorManagement";
+    InterfaceType = "CMPI";
+    InterfaceVersion = "2.0.0";
+    Location = "pyCmpiProvider"; 
+    UserContext = 2; // Requestor
+    Vendor = "TODO"; // TODO
+    Version = "1.0";
+}; 
+instance of PG_Provider
+{
+    Name = "LMI_BasicExecutionServiceCondorManagement"; 
+    ProviderModuleName = "pyCmpiProvider_LMI_BasicExecutionServiceCondorManagement";
+}; 
+instance of PG_ProviderCapabilities
+{
+    CapabilityID = "LMI_BasicExecutionServiceCondorManagement";
+    ProviderModuleName = "pyCmpiProvider_LMI_BasicExecutionServiceCondorManagement";
+    ProviderName = "LMI_BasicExecutionServiceCondorManagement";
+    ClassName = "LMI_BasicExecutionServiceCondorManagement";
+    Namespaces = {"root/cimv2"}; // TODO
+    ProviderType = {2,5}; // Instance, Method
+};

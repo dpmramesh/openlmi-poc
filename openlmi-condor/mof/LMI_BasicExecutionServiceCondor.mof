@@ -1,15 +1,80 @@
-"No existe el port-type BES Factory, solo existe el servicio BES
- por tanto derivamos del tipo base y creamos el port-type"
+//No existe el port-type BES Factory, solo existe el servicio BES
+//por tanto derivamos del tipo base y creamos el port-type
+//class LMI_BasicExecutionServiceCondorFactory: CIM_Service {
 class LMI_BasicExecutionServiceCondorFactory: CIM_BasicExecutionService {
+	[Key, Description("Boolean functional state of whole system")]
+	string IsAcceptingNewActivities;
+
+	[Key, Description("Logical whole system name")]
+	string CommonName;
+
+	[Key, Description("Logical whole system name")]
+	string LongDescription;
+
+	[Key, Description("Logical whole system name")]
+	string TotalNumberOfActivities;
+
+	[Key, Description("Logical whole system name")]
+	string ActivityReference;
+
+	[Key, Description("Logical whole system name")]
+	string TotalNumberOfContainedResources;
+
+	[Key, Description("Logical whole system name")]
+	string NamingProfile;
+
+	[Key, Description("Logical whole system name")]
+	string BESExtension;
+
+	[Key, Description("Logical whole system name")]
+	string LocalResourceManagerType;
+
+	[Key, Description("Logical whole system name")]
+	string OperatingSystem;
+
+	[Key, Description("Logical whole system name")]
+	string CPUArchitecture;
+
+	[Key, Description("Logical whole system name")]
+	string CPUCount;
+
+	[Key, Description("Logical whole system name")]
+	string CPUSpeed;
+
+	[Key, Description("Logical whole system name")]
+	string PhysicalMemory;
+
+	[Key, Description("Logical whole system name")]
+	string VirtualMemory;
 };
 
-"No existe en el CIM model actual el modelado de este tipo, por
-tanto derivamos de la clase fundamental y lo creamos nosotros segun 
-la especificacion indica"
+//No existe en el CIM model actual el modelado de este tipo, por
+//tanto derivamos de la clase fundamental y lo creamos nosotros segun 
+//la especificacion indica
 class LMI_BasicExecutionServiceCondorManagement: LMI_BasicExecutionServiceManagement {
+	[Key, Description("Logical whole system name")]
+	string CommonName;
 };
 
-"Creamos el otro port-type propuesto por la especificacion OGSA/BES"
-class LMI_BasicExecutionServiceCondorManagement: CIM_Service {
+//Creamos el otro port-type propuesto por la especificacion OGSA/BES
+class LMI_BasicExecutionServiceManagement: CIM_Service {
+
+	[Key, Description("Logical whole system name")]
+	string OperatingSystem;
+
+	[Key, Description("Logical whole system name")]
+	string CPUArchitecture;
+
+	[Key, Description("Logical whole system name")]
+	string CPUCount;
+
+	[Key, Description("Logical whole system name")]
+	string CPUSpeed;
+
+	[Key, Description("Logical whole system name")]
+	string PhysicalMemory;
+
+	[Key, Description("Logical whole system name")]
+	string VirtualMemory;
 };
 

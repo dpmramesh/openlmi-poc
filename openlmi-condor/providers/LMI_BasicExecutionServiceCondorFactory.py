@@ -134,6 +134,7 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
 
         """
 
+	print "<enum_instances CAPULLO>"
         logger = env.get_logger()
         logger.log_debug('Entering %s.enum_instances()' \
                 % self.__class__.__name__)
@@ -151,11 +152,10 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
             None, 'CreationClassName': None, 'OperatingSystem': None,
             'SystemCreationClassName': None})
         
-        while False: # TODO more instances?
-            # TODO fetch system resource
+        while False:
             # Key properties    
-            #model['CPUArchitecture'] = '' # TODO (type = unicode)    
-            #model['SystemName'] = '' # TODO (type = unicode)    
+            model['CPUArchitecture'] = 'Intel Core5' 
+            model['SystemName'] = 'Linux Host'
             #model['TotalNumberOfContainedResources'] = '' # TODO (type = unicode)    
             #model['OperatingSystem'] = '' # TODO (type = unicode)    
             #model['IsAcceptingNewActivities'] = '' # TODO (type = unicode)    

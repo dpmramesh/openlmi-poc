@@ -1,0 +1,5 @@
+[LMI_BasicExecutionServiceCondorFactory]
+   provider:/usr/lib/python2.7/site-packages/openlmi/condor/LMI_BasicExecutionServiceCondorFactory
+   location: pyCmpiProvider
+   type: instance method
+   namespace: root/cimv2

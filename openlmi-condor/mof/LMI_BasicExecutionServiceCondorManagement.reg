@@ -1,0 +1,6 @@
+// SFCB Provider registration for LMI_BasicExecutionServiceCondorManagement
+[LMI_BasicExecutionServiceCondorManagement]
+   provider:/usr/lib/python2.7/site-packages/openlmi/storage/LMI_BasicExecutionServiceCondorManagement
+   location: pyCmpiProvider
+   type: instance method
+   namespace: root/cimv2 // TODO

@@ -31,6 +31,7 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
     """
 
     def __init__ (self, env):
+	print "TESTTTTTTT"
         logger = env.get_logger()
         logger.log_debug('Initializing provider %s from %s' \
                 % (self.__class__.__name__, __file__))

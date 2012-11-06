@@ -1,0 +1,15 @@
+LMI_BasicExecutionServiceCondorFactory is the manager
+of jobs (activities) with the method CreateActivity.
+
+In Condor the manager of jobs is the condor_schedd in the
+condor pool. There are one or more condor_schedd in a
+Condor pool. So we can instantiate one BESCondorFactory
+per condor_schedd in the Condor pool. The manager of jobs
+in Condor is the queue of jobs, one job queue for 
+condor_schedd.
+
+We send jobs (activities) per BESCondorFactory instance.
+And we make management procedures (condor management tasks)
+per BESCondorManagement, one instance per Host in the pool.
+
+

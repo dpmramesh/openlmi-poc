@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 #
-# Minimal entries in condor_config.local
+# We need the following in order to use Condor SOAP:
+# 1. yum install python-suds 
+# 2. yum install condor (in order to get *.wsdl schemas).
+#    For codor 7.8.x. For condor 7.9.x
+# 3. Enable the SOAP interface in the central manager machine
+# with the minimal entries in condor_config.local:
 # - Turn on SOAP functionality
 # ENABLE_SOAP = TRUE
 #
@@ -19,10 +24,38 @@
 
 from suds.client import Client
 
-SUBMISSION_MACHINE = "mncars002"
-SCHEDD_SOAP_PORT   = "8080"
-SCHEDD_LOCATION    = "http://" + SUBMISSION_MACHINE + ":" + SCHEDD_SOAP_PORT=
+CONDOR_HOST      = "mncars002"
+SCHEDD_PORT      = "8080"
+COLLEC_PORT      = "9618"
+SCHEDD_LOCATION  = "http://" + CONDOR_HOST + ":" + SCHEDD_PORT
+COLLEC_LOCATION  = "http://" + CONDOR_HOST + ":" + COLLEC_PORT
+WSDL_SCHEDD_FILE = "file:condorSchedd.wsdl"
+WSDL_COLLEC_FILE = "file:condorCollector.wsdl"
 
-condor_schedd = Client("file:///usr/lib64/condor/webservice/condorSchedd.wsdl", location=SCHEDD_LOCATION)
+# We can query to any queue scheduler
+condor_schedd = Client(WSDL_SCHEDD_FILE, location=SCHEDD_LOCATION)
 ads = condor_schedd.service.getJobAds(None, None)
 print ads
+
+# We can query to the pool collector
+condor_collector = Client(WSDL_COLLEC_FILE, location=COLLEC_LOCATION)
+vers = condor_collector.service.getVersionString()
+print vers
+
+schedds = condor_collector.service.queryScheddAds()
+#print schedds
+
+def classad_dict(ad):
+    native = {}
+    attrs = ad[0]
+    for attr in attrs:
+        native[attr['name']] = attr['value']
+    return native
+
+print "BasicExecutionServiceCondorFactory instances (condor_schedd):"
+for i in range(len(schedds[0])):
+	schedd_ad = classad_dict(schedds[0][i])
+	print schedd_ad["Machine"] + " -> " + schedd_ad["ScheddIpAddr"]
+
+
+

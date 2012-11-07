@@ -1,5 +1,7 @@
 include COPYING CHANGES
-include doc/Makefile doc/openlmitheme/theme.conf doc/conf.py doc/*.rst doc/pic/*.dia doc/_static/*
-include mof/LMI_Storage.mof mof/LMI_Storage.reg
-include client/client-highlevel.py
-include tools/register.sh tools/reg2pegasus.py
+include doc/README
+include mof/LMI_BasicExecutionServiceCondor.mof
+include mof/LMI_BasicExecutionServiceCondorFactory.reg
+include mof/LMI_BasicExecutionServiceCondorManagement.reg
+include test/condorCollector.wsdl test/condorSchedd.wsdl
+include tools/register.sh tools/get-code-skeleton.py

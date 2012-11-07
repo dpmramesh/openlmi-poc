@@ -6,6 +6,7 @@ Instruments the CIM class LMI_BasicExecutionServiceCondorFactory
 
 import pywbem
 from pywbem.cim_provider2 import CIMProvider2
+from suds.client import Client
 
 class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
     """Instrument the CIM class LMI_BasicExecutionServiceCondorFactory 
@@ -27,11 +28,15 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
     application, to determine where to place the activity (in which
     execution environment) based on the input activity document (that
     activity\'s environment/resource requirements).
+
+    In partircular for Condor batch scheduler, LMI_BESCondorFactory
+    represents the machines with job submission capabilities. In a Condor
+    pool these machines have condor_schedd daemons running. We will have
+    an instance of this class per condor_schedd daemon in the Condor pool.
     
     """
 
     def __init__ (self, env):
-	print "TESTTTTTTT"
         logger = env.get_logger()
         logger.log_debug('Initializing provider %s from %s' \
                 % (self.__class__.__name__, __file__))
@@ -135,7 +140,6 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
 
         """
 
-	print "<enum_instances CAPULLO>"
         logger = env.get_logger()
         logger.log_debug('Entering %s.enum_instances()' \
                 % self.__class__.__name__)
@@ -152,28 +156,44 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
             'NamingProfile': None, 'TotalNumberOfContainedResources':
             None, 'CreationClassName': None, 'OperatingSystem': None,
             'SystemCreationClassName': None})
-        
-        while False:
+
+        CONDOR_HOST      = "mncars002"
+        SCHEDD_PORT      = "8080"
+        COLLEC_PORT      = "9618"
+        SCHEDD_LOCATION  = "http://" + CONDOR_HOST + ":" + SCHEDD_PORT
+        COLLEC_LOCATION  = "http://" + CONDOR_HOST + ":" + COLLEC_PORT
+        WSDL_SCHEDD_FILE = "file:condorSchedd.wsdl"
+        WSDL_COLLEC_FILE = "file:/usr/lib/python2.7/site-packages/openlmi/condor/condorCollector.wsdl"
+    
+        condor_collector = Client(WSDL_COLLEC_FILE, location=COLLEC_LOCATION)
+        schedds = condor_collector.service.queryScheddAds()
+
+        instances = []
+        for i in range(len(schedds[0])):
+            schedd_ad = self._classad_dict(schedds[0][i])
+            instances.append(schedd_ad["Machine"])
+
+        for i in instances:
             # Key properties    
             model['CPUArchitecture'] = 'Intel Core5' 
             model['SystemName'] = 'Linux Host'
-            #model['TotalNumberOfContainedResources'] = '' # TODO (type = unicode)    
-            #model['OperatingSystem'] = '' # TODO (type = unicode)    
-            #model['IsAcceptingNewActivities'] = '' # TODO (type = unicode)    
-            #model['LocalResourceManagerType'] = '' # TODO (type = unicode)    
-            #model['LongDescription'] = '' # TODO (type = unicode)    
-            #model['CPUSpeed'] = '' # TODO (type = unicode)    
-            #model['SystemCreationClassName'] = '' # TODO (type = unicode)    
-            #model['CommonName'] = '' # TODO (type = unicode)    
-            #model['TotalNumberOfActivities'] = '' # TODO (type = unicode)    
-            #model['BESExtension'] = '' # TODO (type = unicode)    
-            #model['CPUCount'] = '' # TODO (type = unicode)    
-            #model['NamingProfile'] = '' # TODO (type = unicode)    
-            #model['ActivityReference'] = '' # TODO (type = unicode)    
+            model['TotalNumberOfContainedResources'] = '' 
+            model['OperatingSystem'] = '' 
+            model['IsAcceptingNewActivities'] = '1'
+            model['LocalResourceManagerType'] = '' 
+            model['LongDescription'] = '' 
+            model['CPUSpeed'] = '' 
+            model['SystemCreationClassName'] = ''
+            model['CommonName'] = ''
+            model['TotalNumberOfActivities'] = ''
+            model['BESExtension'] = ''
+            model['CPUCount'] = ''
+            model['NamingProfile'] = ''
+            model['ActivityReference'] = ''
             model['CreationClassName'] = 'LMI_BasicExecutionServiceCondorFactory'    
-            #model['VirtualMemory'] = '' # TODO (type = unicode)    
-            #model['PhysicalMemory'] = '' # TODO (type = unicode)    
-            #model['Name'] = '' # TODO (type = unicode)
+            model['VirtualMemory'] = ''
+            model['PhysicalMemory'] = ''
+            model['Name'] = i
             if keys_only:
                 yield model
             else:
@@ -246,7 +266,15 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
 
         # TODO delete the resource
         raise pywbem.CIMError(pywbem.CIM_ERR_NOT_SUPPORTED) # Remove to implement
-        
+
+    def _classad_dict(self, ad):
+        native = {}
+        attrs = ad[0]
+        for attr in attrs:
+            native[attr['name']] = attr['value']
+        return native
+
+
     def cim_method_requeststatechange(self, env, object_name,
                                       param_requestedstate=None,
                                       param_timeoutperiod=None):
@@ -748,15 +776,14 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
         logger = env.get_logger()
         logger.log_debug('Entering %s.cim_method_createactivity()' \
                 % self.__class__.__name__)
-
-        # TODO do something
-        raise pywbem.CIMError(pywbem.CIM_ERR_METHOD_NOT_AVAILABLE) # Remove to implemented
+       
         out_params = []
         #out_params+= [pywbem.CIMParameter('job', type='reference', 
-        #                   value=pywbem.CIMInstanceName(classname='CIM_ConcreteJob', ...))] # TODO
-        #out_params+= [pywbem.CIMParameter('identifier', type='string', 
-        #                   value='')] # TODO
-        #rval = # TODO (type pywbem.Uint32 self.Values.CreateActivity)
+        #                   value=pywbem.CIMInstanceName(classname='CIM_ConcreteJob', ...))] 
+        out_params+= [pywbem.CIMParameter('Identifier', type='string', 
+                           value='Este seria el job identifier')]
+        print param_request
+        rval = pywbem.Uint32(2) #pywbem.Uint32 # self.Values.CreateActivity
         return (rval, out_params)
         
     def cim_method_getactivitydocuments(self, env, object_name,
@@ -1086,3 +1113,5 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
 def get_providers(env): 
     lmi_basicexecutionservicecondorfactory_prov = LMI_BasicExecutionServiceCondorFactory(env)  
     return {'LMI_BasicExecutionServiceCondorFactory': lmi_basicexecutionservicecondorfactory_prov} 
+
+# vim: ts=4:et:sw=4:tw=80:sts=4:cc=80

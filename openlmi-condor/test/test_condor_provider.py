@@ -57,21 +57,27 @@ cliconn.debug = True
 #insts  = cliconn.ExecQuery('WQL', 'select * from LMI_BasicExecutionServiceCondorFactory')
 insts = cliconn.EnumerateInstanceNames("LMI_BasicExecutionServiceCondorFactory")
 
-print insts
-# The invocation of CIM method (an extrinsic method) with the following method parameters:
-#
-# string Method_Name - The name of the method that will be invoked.
-# pywbem.CIMInstanceName Object_Name - A reference to a CIM instance. The InstanceName or 
-#					ClassName of the object on which the method is invoked.
-# 
+dictionary = {}
+for i in insts:
+	for ii in range(len(i.items())):
+		key, value = i.items()[ii]
+		dictionary[str(key)] = str(value)
+	print dictionary["Name"]
 
-"""
-ret = cliconn.InvokeMethod('Add', 
-		insts[0].classname,
-		bc=insts[0].path, 
-		X=pywbem.Uint32(sys.argv[1]), 
-		Y=pywbem.Uint32(sys.argv[2]))
+# select the instance for working on. The target condor_schedd for
+# running the Job.
+instance = cliconn.GetInstance(insts[0])
+#print instance
 
-print "result: %s" % ret[0]
-print "error: %s" % ret[1]
-"""
+try:
+    ret = cliconn.InvokeMethod('CreateActivity', 
+			instance.classname,
+			Request="definicion de trabajo como sea")
+
+except pywbem.CIMError, arg:
+    if arg[0] != pywbem.CIM_ERR_NOT_SUPPORTED:
+        print 'InvokeMethod(instancename): %s' % arg[1]
+        sys.exit(1)
+
+print "result code: %s" % ret[0]
+print "result values (Job id): %s" % ret[1]

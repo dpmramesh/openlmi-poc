@@ -1,3 +1,9 @@
+OGSA Basic Execution Service Version 1.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This file describe the set of components deployed
+in a Condor Pool conform the OGSA/BES v1.0 standard.
+
 LMI_BasicExecutionServiceCondorFactory is the manager
 of jobs (activities) with the method CreateActivity.
 

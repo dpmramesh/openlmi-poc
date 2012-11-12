@@ -59,3 +59,28 @@ for i in range(len(schedds[0])):
 
 
 
+# Submitting jobs
+transaction = condor_schedd.service.beginTransaction(60);
+transactionId = transaction[1]
+print "TransactionId: %s" % transactionId
+
+cluster = condor_schedd.service.newCluster(transactionId)
+clusterId=cluster[1]
+print "ClusterId: %s" % clusterId
+
+job = condor_schedd.service.newJob(transactionId, clusterId)
+jobId = job[1]
+print "JobId: %s" % jobId 
+
+# STANDARD = 1, VANILLA = 5, SCHEDULER = 7, MPI = 8, GRID = 9, JAVA = 10, PARALLEL = 11, LOCALUNIVERSE = 12, VM = 13
+jobAd = condor_schedd.service.createJobTemplate(clusterId, jobId, "condor", 5, "/bin/sleep", "30", "")
+#print "JOBAD:"
+#print jobAd
+
+print "submit:"
+result = condor_schedd.service.submit(transactionId, clusterId, jobId, jobAd)
+print result
+
+print "commit:"
+result = condor_schedd.service.commitTransaction(transactionId)
+print result

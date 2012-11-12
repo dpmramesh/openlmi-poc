@@ -7,6 +7,7 @@ Instruments the CIM class LMI_BasicExecutionServiceCondorFactory
 import pywbem
 from pywbem.cim_provider2 import CIMProvider2
 from suds.client import Client
+import json
 
 class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
     """Instrument the CIM class LMI_BasicExecutionServiceCondorFactory 
@@ -783,6 +784,8 @@ class LMI_BasicExecutionServiceCondorFactory(CIMProvider2):
         out_params+= [pywbem.CIMParameter('Identifier', type='string', 
                            value='Este seria el job identifier')]
         print param_request
+        trabajo=json.loads(param_request)
+        print trabajo["Universe"]
         rval = pywbem.Uint32(2) #pywbem.Uint32 # self.Values.CreateActivity
         return (rval, out_params)
         

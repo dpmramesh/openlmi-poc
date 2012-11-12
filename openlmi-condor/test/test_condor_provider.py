@@ -20,6 +20,7 @@
 
 import sys
 import pywbem
+import json
 
 if len(sys.argv) < 3:
     print """Usage: %s operand-1 operand-2
@@ -69,10 +70,18 @@ for i in insts:
 instance = cliconn.GetInstance(insts[0])
 #print instance
 
+Job = {"Universe" : "vanilla",
+"Executable" : "/bin/sleep",
+"Arguments" : 30,
+"Log" : "simple.log",
+"Output" : "simple.out",
+"Error" : "simple.error",
+"Queue" : 150}
+
 try:
     ret = cliconn.InvokeMethod('CreateActivity', 
 			instance.classname,
-			Request="definicion de trabajo como sea")
+			Request=json.dumps(Job))
 
 except pywbem.CIMError, arg:
     if arg[0] != pywbem.CIM_ERR_NOT_SUPPORTED:

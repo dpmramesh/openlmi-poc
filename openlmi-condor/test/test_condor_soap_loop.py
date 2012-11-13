@@ -91,36 +91,21 @@ cluster = condor_schedd.service.newCluster(transactionId)
 clusterId=cluster[1]
 print "ClusterId: %s" % clusterId
 
-job = condor_schedd.service.newJob(transactionId, clusterId)
-jobId = job[1]
-print "JobId: %s" % jobId 
+for i in xrange(int(sys.argv[1])):
+	print "newJob"
+	job = condor_schedd.service.newJob(transactionId, clusterId)
+	jobId = job[1]
+	print "createJobTemplate"
+	job = condor_schedd.service.createJobTemplate(clusterId, jobId, "condor", 5, "/bin/sleep", "30", "Queue=150")
+	jobAd = job[1]
+	jobAd[0][58].value = "FALSE"
+	print "submit jobId -> %s" % jobId
+	print "submit"
+	result = condor_schedd.service.submit(transactionId, clusterId, jobId, jobAd)
 
-# STANDARD=1, VANILLA=5, SCHEDULER=7, MPI=8, GRID=9, JAVA=10, PARALLEL=11, LOCALUNIVERSE=12, VM=13
-#job = condor_schedd.service.createJobTemplate(clusterId, jobId, "condor", 5, "/bin/sleep", "30", "LeaveJobInQueue=FALSE")
-job = condor_schedd.service.createJobTemplate(clusterId, jobId, "condor", 5, "/bin/sleep", "30", "Queue=150")
-jobAd = job[1]
-print job
-#print jobAd[0][58].name
-#jobAd[0][58].value = "FALSE"
-
-#cls = condor_schedd.factory.create("ClassAdStructAttr")
-#cls.name = "queue"
-#cls.type = "INTEGER-ATTR"
-#cls.value = 150
-#print cls
-#print job[1].item.append(cls)
-
-#sys.exit(0)
-print "submit:"
-result = condor_schedd.service.submit(transactionId, clusterId, jobId, jobAd)
-print result
-
-print "commit:"
 result = condor_schedd.service.commitTransaction(transactionId)
+condor_schedd.service.requestReschedule();
+#res = condor_schedd.service.closeSpool(transaction, clusterId, jobId)
 print result
 
-res = condor_schedd.service.closeSpool(transaction, clusterId, jobId)
-print res
-#condor_schedd.service.requestReschedule();
 
-# vim: ts=4:et:sw=4:tw=80:sts=4:cc=80

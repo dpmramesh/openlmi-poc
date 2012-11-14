@@ -13,7 +13,8 @@ def dictToClassAd(dic):
     pass
 
 #
-# Append new property in jobAd passed
+# Append new property in jobAd passed. The job is passed
+# by-reference.
 #
 def createAdProperty(service, job, name, typ, val):
     p = service.factory.create("ClassAdStructAttr")
@@ -21,14 +22,24 @@ def createAdProperty(service, job, name, typ, val):
     p.type = typ
     p.value = val
     job[1].item.append(p)
-    return job
+    return True
 #
-# Update type and/or value of property name
+# Update type and/or value of property name. Job
+# is passed-by-reference. Return true if name is
+# found.
 #
-def setAdProperty(name, typ, val):
-    pass
+def updateAdProperty(job, name, type=None, value=None):
+    for i in range(len(job[1][0])):
+        if (job[1][0][i].name == name):
+            if type:
+                job[1][0][i].type = type
+            if value:
+                job[1][0][i].value = value
+            return True
+    return False
 #
-# Pass jobAd (createJobTemplate) and convert to dictionary
+# Pass jobAd (createJobTemplate) and return one
+# converted in dictionary { name:value }
 #
 def classAdToDict(job):
     d = {}
@@ -41,19 +52,20 @@ def classAdToDict(job):
 # Pass jobAd (createJobTemplate), and print all name=value 
 #
 def listAdProperties(job):
-	jobAd = job[1]
-	for i in range(len(jobAd[0])):
-		print "%s = %s" % (jobAd[0][i].name, jobAd[0][i].value)
+    jobAd = job[1]
+    for i in range(len(jobAd[0])):
+        print "%s = %s" % (jobAd[0][i].name, jobAd[0][i].value)
 #
 # Pass property name and return {"name":"value"} dict.
 #
-def getAdProperty(name):
-	d = {}
-	for i in range(len(jobAd[0])):
-		if (jobAd[0][i].name == name):
-			d[jobAd[0][i].name] = jobAd[0][i].value
-			return d
-	return None
+def getAdProperty(job, name):
+    jobAd = job[1]
+    d = {}
+    for i in range(len(jobAd[0])):
+        if (jobAd[0][i].name == name):
+            d[jobAd[0][i].name] = jobAd[0][i].value
+            return d
+    return None
 
 
 # ---------------- check utils -------------
@@ -70,8 +82,8 @@ ads = condor_schedd.service.getJobAds(None, None)
 #print ads
 
 #for i in range(len(schedds[0])):
-#	schedd_ad = classad_dict(schedds[0][i])
-#	print schedd_ad["Machine"] + " -> " + schedd_ad["ScheddIpAddr"]
+#   schedd_ad = classad_dict(schedds[0][i])
+#   print schedd_ad["Machine"] + " -> " + schedd_ad["ScheddIpAddr"]
 
 transaction = condor_schedd.service.beginTransaction(10);
 transactionId = transaction[1]
@@ -86,7 +98,7 @@ job = condor_schedd.service.createJobTemplate(clusterId,
                 jobId, "condor", 5, "/bin/sleep", "30", "Queue=150")
 jobAd = job[1]
 
-ret = getAdProperty("Owner")
+ret = getAdProperty(job, "Owner")
 print ret
 
 #listAdProperties(job)
@@ -94,17 +106,12 @@ print ret
 ret = classAdToDict(job)
 print ret["Owner"]
 
-job = createAdProperty(condor_schedd, job, "Queue", "INTEGER-ATTR", 150) 
-print getAdProperty("Queue")
+createAdProperty(condor_schedd, job, "Queue", "INTEGER-ATTR", 150) 
+print getAdProperty(job, "Queue")
 
-#print jobAd[0][58].name
-#jobAd[0][58].value = "FALSE"
+updateAdProperty(job, "LeaveJobInQueue", value="FALSE")
 
-#cls = condor_schedd.factory.create("ClassAdStructAttr")
-#cls.name = "queue"
-#cls.type = "INTEGER-ATTR"
-#cls.value = 150
-#print cls
-#print job[1].item.append(cls)
+print getAdProperty(job, "LeaveJobInQueue")
 
-# vim: ts=4:et:sw=4:tw=80:sts=4:cc=80
+for i in ret.keys():
+	print "%s = %s" % (i, ret[i])

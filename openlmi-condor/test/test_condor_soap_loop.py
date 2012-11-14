@@ -40,6 +40,16 @@ WSDL_COLLEC_FILE = "file:condorCollector.wsdl"
 #logging.basicConfig(level=logging.INFO)
 #logging.getLogger('suds.client').setLevel(logging.DEBUG)
 
+def updateAdProperty(job, name, type=None, value=None):
+    for i in range(len(job[1][0])):
+        if (job[1][0][i].name == name):
+            if type:
+                job[1][0][i].type = type
+            if value:
+                job[1][0][i].value = value
+            return True
+    return False
+
 def classad_dict(ad):
     native = {}
     attrs = ad[0]
@@ -96,9 +106,9 @@ for i in xrange(int(sys.argv[1])):
 	job = condor_schedd.service.newJob(transactionId, clusterId)
 	jobId = job[1]
 	print "createJobTemplate"
-	job = condor_schedd.service.createJobTemplate(clusterId, jobId, "condor", 5, "/bin/sleep", "30", "Queue=150")
+	job = condor_schedd.service.createJobTemplate(clusterId, jobId, "condor", 5, "/bin/sleep", "30", "")
+	updateAdProperty(job, "LeaveJobInQueue", value="FALSE")
 	jobAd = job[1]
-	jobAd[0][58].value = "FALSE"
 	print "submit jobId -> %s" % jobId
 	print "submit"
 	result = condor_schedd.service.submit(transactionId, clusterId, jobId, jobAd)

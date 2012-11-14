@@ -33,5 +33,13 @@ def WakeOnLan(ethernet_address):
 #WakeOnLan('00:03:56:0d:89:56') 
 
 # Intel 82566DM
+
+# mncarsnas -> 00:12:3f:5f:2c:1d
+# mncars001 -> 00:d0:b7:b2:92:86
+# mncars002 -> 00:0f:fe:4d:64:eb
+# mncars003 -> 00:0f:fe:7b:f2:02
+# mncars004 -> 00:18:71:70:f1:7b
+# mncars005 -> 00:0f:fe:7b:f4:30
+
 WakeOnLan('00:0F:FE:4D:64:69')
 

@@ -62,6 +62,9 @@ def classad_dict(ad):
 #
 condor_schedd = Client(WSDL_SCHEDD_FILE, location=SCHEDD_LOCATION)
 ads = condor_schedd.service.getJobAds(None, None)
+
+cache = condor_schedd.options.cache
+cache.setduration(seconds=200)
 #print ads
 
 #
@@ -101,16 +104,18 @@ cluster = condor_schedd.service.newCluster(transactionId)
 clusterId=cluster[1]
 print "ClusterId: %s" % clusterId
 
+print "createJobTemplate"
+job_template = condor_schedd.service.createJobTemplate(clusterId, 0, "condor", 5, "/bin/sleep", "30", "")
+
 for i in xrange(int(sys.argv[1])):
-	print "newJob"
+	print "newJob for clusterId: %s" % clusterId
 	job = condor_schedd.service.newJob(transactionId, clusterId)
 	jobId = job[1]
-	print "createJobTemplate"
-	job = condor_schedd.service.createJobTemplate(clusterId, jobId, "condor", 5, "/bin/sleep", "30", "")
-	updateAdProperty(job, "LeaveJobInQueue", value="FALSE")
-	jobAd = job[1]
+	print "updating template"
+	updateAdProperty(job_template, "ProcId", value=jobId)
+	updateAdProperty(job_template, "LeaveJobInQueue", value="FALSE")
+	jobAd = job_template[1]
 	print "submit jobId -> %s" % jobId
-	print "submit"
 	result = condor_schedd.service.submit(transactionId, clusterId, jobId, jobAd)
 
 result = condor_schedd.service.commitTransaction(transactionId)

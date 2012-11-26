@@ -1,0 +1,24 @@
+--- condor-7.8.6-vanilla/src/condor_examples/condor_config.local.generic	2012-10-25 06:10:43.000000000 +0200
++++ condor-7.8.6/src/condor_examples/condor_config.local.generic	2012-11-26 15:45:19.522675943 +0100
+@@ -31,3 +31,21 @@ KILL = FALSE
+ ##  The list is a comma or space separated list of subsystem names
+ 
+ DAEMON_LIST = COLLECTOR, MASTER, NEGOTIATOR, SCHEDD, STARTD
++
++# Turn on SOAP functionality
++ENABLE_SOAP = TRUE
++#
++# # Enable the web-service
++ENABLE_WEB_SERVER = TRUE
++WEB_ROOT_DIR=$(RELEASE_DIR)/web
++# # Give everyone access... yikes! (you should probably not allow for 
++# # this in a production environment)
++ALLOW_SOAP = */*
++QUEUE_ALL_USERS_TRUSTED = TRUE
++#
++# # Set a well known port for the schedd to listen on
++SCHEDD_ARGS = -p 9090
++HOSTALLOW_WRITE = *
++#
++# #SEC_CLIENT_AUTHENTICATION_METHODS = KERBEROS
++#

@@ -1,0 +1,644 @@
+--- condor-7.8.6-vanilla/src/condor_examples/condor_config.generic	2012-10-25 06:10:43.000000000 +0200
++++ condor-7.8.6/src/condor_examples/condor_config.generic	2012-11-26 13:23:05.763797954 +0100
+@@ -47,27 +47,27 @@
+ ######################################################################
+ 
+ ##  What machine is your central manager?
+-CONDOR_HOST	= central-manager-hostname.your.domain
++CONDOR_HOST	= $(FULL_HOSTNAME)
+ 
+ ##--------------------------------------------------------------------
+ ##  Pathnames:
+ ##--------------------------------------------------------------------
+ ##  Where have you installed the bin, sbin and lib condor directories?   
+-RELEASE_DIR		= /usr/local/condor
++RELEASE_DIR		= /usr
+ 
+ ##  Where is the local condor directory for each host?  
+ ##  This is where the local config file(s), logs and
+ ##  spool/execute directories are located
+-LOCAL_DIR		= $(TILDE)
++LOCAL_DIR		= /var
+ #LOCAL_DIR		= $(RELEASE_DIR)/hosts/$(HOSTNAME)
+ 
+ ##  Where is the machine-specific local config file for each host?
+-LOCAL_CONFIG_FILE	= $(LOCAL_DIR)/condor_config.local
++LOCAL_CONFIG_FILE	= /etc/condor/condor_config.local
+ #LOCAL_CONFIG_FILE	= $(RELEASE_DIR)/etc/$(HOSTNAME).local
+ 
+ ##  Where are optional machine-specific local config files located?
+ ##  Config files are included in lexicographic order.
+-LOCAL_CONFIG_DIR	= $(LOCAL_DIR)/config
++LOCAL_CONFIG_DIR	= /etc/condor/config.d
+ #LOCAL_CONFIG_DIR	= $(LOCAL_DIR)/config
+ 
+ ## Blacklist for file processing in the LOCAL_CONFIG_DIR
+@@ -75,7 +75,7 @@ LOCAL_CONFIG_DIR	= $(LOCAL_DIR)/config
+ 
+ ## If the local config file is not present, is it an error?
+ ## WARNING: This is a potential security issue. 
+-## If not specified, the default is True
++## If not specificed, the default is True
+ #REQUIRE_LOCAL_CONFIG_FILE = TRUE
+ 
+ ##--------------------------------------------------------------------
+@@ -129,7 +129,7 @@ COLLECTOR_NAME 		= My Pool - $(CONDOR_HO
+ ##  The user/group ID <uid>.<gid> of the "Condor" user. 
+ ##  (this can also be specified in the environment)
+ ##  Note: the CONDOR_IDS setting is ignored on Win32 platforms
+-#CONDOR_IDS=x.x
++CONDOR_IDS=500.500
+ 
+ ##--------------------------------------------------------------------
+ ##  Flocking: Submitting jobs to more than one pool
+@@ -180,7 +180,7 @@ FLOCK_COLLECTOR_HOSTS = $(FLOCK_TO)
+ ##  machine(s) where whoever is the condor administrator(s) works
+ ##  (assuming you trust all the users who log into that/those
+ ##  machine(s), since this is machine-wide access you're granting).
+-ALLOW_ADMINISTRATOR = $(CONDOR_HOST), $(IP_ADDRESS)
++ALLOW_ADMINISTRATOR = $(CONDOR_HOST)
+ 
+ ##  If there are no machines that should have administrative access 
+ ##  to your pool (for example, there's no machine where only trusted
+@@ -239,11 +239,11 @@ ALLOW_WRITE = $(FULL_HOSTNAME), $(IP_ADD
+ 
+ ##  Negotiator access.  Machines listed here are trusted central
+ ##  managers.  You should normally not have to change this.
+-ALLOW_NEGOTIATOR = $(CONDOR_HOST), $(IP_ADDRESS)
++ALLOW_NEGOTIATOR = $(CONDOR_HOST)
+ ##  Now, with flocking we need to let the SCHEDD trust the other 
+ ##  negotiators we are flocking with as well.  You should normally 
+ ##  not have to change this either.
+-ALLOW_NEGOTIATOR_SCHEDD = $(CONDOR_HOST), $(FLOCK_NEGOTIATOR_HOSTS), $(IP_ADDRESS)
++ALLOW_NEGOTIATOR_SCHEDD = $(CONDOR_HOST), $(FLOCK_NEGOTIATOR_HOSTS)
+ 
+ ##  Config access.  Machines listed here can use the condor_config_val
+ ##  tool to modify all daemon configurations.  This level of host-wide
+@@ -266,12 +266,12 @@ ALLOW_READ_STARTD     = $(ALLOW_READ), $
+ ##  These parameters define the list of attributes that can be set
+ ##  remotely with condor_config_val for the security access levels
+ ##  defined above (for example, WRITE, ADMINISTRATOR, CONFIG, etc).
+-##  Please see the administrator's manual for further details on these
++##  Please see the administrator's manual for futher details on these
+ ##  settings, what they're for, and how to use them.  There are no
+ ##  default values for any of these settings.  If they are not
+ ##  defined, no attributes can be set with condor_config_val.
+ 
+-## Do you want to allow condor_config_val -reset to work at all?
++## Do you want to allow condor_config_val -rset to work at all?
+ ## This feature is disabled by default, so to enable, you must
+ ## uncomment the following setting and change the value to "True". 
+ ## Note: changing this requires a restart not just a reconfig.
+@@ -318,6 +318,12 @@ ALLOW_READ_STARTD     = $(ALLOW_READ), $
+ ##  permission, you would use:
+ #STARTD_SETTABLE_ATTRS_OWNER = your_custom_attribute_name
+ 
++##--------------------------------------------------------------------
++##  Password Authentication
++##--------------------------------------------------------------------
++## For Unix machines, the path and file name of the file containing 
++## the pool password for password authentication. 
++#SEC_PASSWORD_FILE = $(LOCAL_DIR)/lib/condor/pool_password
+ 
+ ##--------------------------------------------------------------------
+ ##  Network filesystem parameters:
+@@ -409,7 +415,7 @@ ALLOW_READ_STARTD     = $(ALLOW_READ), $
+ ##  condor account, it's probably condor.  Otherwise, it's whatever
+ ##  you've set in the CONDOR_IDS environment variable.  See the Admin
+ ##  manual for details on this.
+-LOCK		= $(LOG)
++LOCK		= $(LOCAL_DIR)/lock/condor
+ 
+ ##  If you don't use a fully qualified name in your /etc/hosts file
+ ##  (or NIS, etc.) for either your official hostname or as an alias,
+@@ -475,7 +481,7 @@ GLIDEIN_SERVER_URLS = \
+ ##  the execute machine and just make sure the two strings match.  The
+ ##  default for this setting is False, since it is more secure this
+ ##  way.
+-#TRUST_UID_DOMAIN = False
++##RUST_UID_DOMAIN = False
+ 
+ ## If you would like to be informed in near real-time via condor_q when
+ ## a vanilla/standard/java job is in a suspension state, set this attribute to
+@@ -487,7 +493,7 @@ GLIDEIN_SERVER_URLS = \
+ 
+ ## A standard universe job can perform arbitrary shell calls via the
+ ## libc 'system()' function. This function call is routed back to the shadow
+-## which performs the actual system() invocation in the initial directory of the
++## which performs the actual system() invocation in the initialdir of the
+ ## running program and as the user who submitted the job. However, since the
+ ## user job can request ARBITRARY shell commands to be run by the shadow, this
+ ## is a generally unsafe practice. This should only be made available if it is
+@@ -530,17 +536,17 @@ GLIDEIN_SERVER_URLS = \
+ ## gt2 grid universe jobs. The default is False.
+ #DELEGATE_FULL_JOB_GSI_CREDENTIALS = False
+ 
+-## This setting controls the default behavior for the spooling of files
++## This setting controls the default behaviour for the spooling of files
+ ## into, or out of, the Condor system by such tools as condor_submit
+ ## and condor_transfer_data. Here is the list of valid settings for this
+ ## parameter and what they mean:
+ ##
+ ##   stm_use_schedd_only
+-##      Ask the condor_schedd to solely store/retrieve the sandbox
++##      Ask the condor_schedd to solely store/retreive the sandbox
+ ##
+ ##   stm_use_transferd
+ ##      Ask the condor_schedd for a location of a condor_transferd, then
+-##      store/retrieve the sandbox from the transferd itself.
++##      store/retreive the sandbox from the transferd itself.
+ ##
+ ## The allowed values are case insensitive.
+ ## The default of this parameter if not specified is: stm_use_schedd_only
+@@ -617,7 +623,7 @@ TRANSFERER_DEBUG	=
+ ## The daemons touch their log file periodically, even when they have
+ ## nothing to write. When a daemon starts up, it prints the last time
+ ## the log file was modified. This lets you estimate when a previous
+-## instance of a daemon stopped running. This parameter controls how often
++## instance of a daemon stopped running. This paramete controls how often
+ ## the daemons touch the file (in seconds).
+ #TOUCH_LOG_INTERVAL = 60
+ 
+@@ -633,7 +639,7 @@ TRANSFERER_DEBUG	=
+ ##  #        #    #  #    #     #            #####
+ ##  
+ ##  Part 3:  Settings control the policy for running, stopping, and
+-##  periodically check-pointing condor jobs:
++##  periodically checkpointing condor jobs:
+ ######################################################################
+ ######################################################################
+ 
+@@ -768,7 +774,7 @@ UWCS_START	= ( (KeyboardIdle > $(StartId
+ 
+ # Suspend jobs if:
+ # 1) the keyboard has been touched, OR
+-# 2a) The CPU has been busy for more than 2 minutes, AND
++# 2a) The cpu has been busy for more than 2 minutes, AND
+ # 2b) the job has been running for more than 90 seconds
+ UWCS_SUSPEND = ( $(KeyboardBusy) || \
+                  ( (CpuBusyTime > 2 * $(MINUTE)) \
+@@ -801,20 +807,15 @@ UWCS_PREEMPT = ( ((Activity == "Suspende
+ UWCS_MaxJobRetirementTime = 0
+ 
+ ##  If you completely disable preemption of claims to machines, you
+-##  should consider limiting the time span over which new jobs will be
++##  should consider limiting the timespan over which new jobs will be
+ ##  accepted on the same claim.  See the manual section on disabling
+ ##  preemption for a comprehensive discussion.  Since this example
+ ##  configuration does not disable preemption of claims, we leave
+ ##  CLAIM_WORKLIFE undefined (infinite).
+ #UWCS_CLAIM_WORKLIFE = 1200
+ 
+-# How long to allow a job to vacate gracefully.  After this time,
+-# the job is killed.
+-MachineMaxVacateTime = $(MaxVacateTime) 
+-
+-# Abort graceful eviction of a job, even though it has not
+-# yet used all the time allotted by MachineMaxVacateTime.
+-UWCS_KILL = false
++# Kill jobs if they have taken too long to vacate gracefully
++UWCS_KILL = $(ActivityTimer) > $(MaxVacateTime) 
+ 
+ ##  Only define vanilla versions of these if you want to make them
+ ##  different from the above settings.
+@@ -825,7 +826,7 @@ UWCS_KILL = false
+ #PREEMPT_VANILLA  = ( ((Activity == "Suspended") && \
+ #                     ($(ActivityTimer) > $(MaxSuspendTime))) \
+ #                     || (SUSPEND_VANILLA && (WANT_SUSPEND == False)) )
+-#KILL_VANILLA    = false
++#KILL_VANILLA    = $(ActivityTimer) > $(MaxVacateTime)
+ 
+ ##  Checkpoint every 3 hours on average, with a +-30 minute random
+ ##  factor to avoid having many jobs hit the checkpoint server at
+@@ -859,7 +860,7 @@ UWCS_NEGOTIATOR_PRE_JOB_RANK = RemoteOwn
+ ##  The NEGOTIATOR_POST_JOB_RANK expression chooses between
+ ##  resources that are equally preferred by the job.
+ ##  The following example expression steers jobs toward
+-##  faster machines and tends to fill a cluster of multiprocessors
++##  faster machines and tends to fill a cluster of multi-processors
+ ##  breadth-first instead of depth-first.  It also prefers online
+ ##  machines over offline (hibernating) ones.  In this example,
+ ##  the expression is chosen to have no effect when preemption
+@@ -872,10 +873,8 @@ UWCS_NEGOTIATOR_POST_JOB_RANK = \
+ ##  unless the PREEMPTION_REQUIREMENTS expression evaluates to true
+ ##  and the owner of the idle job has a better priority than the owner
+ ##  of the running job.  This expression defaults to true.
+-UWCS_PREEMPTION_REQUIREMENTS = ((SubmitterGroup =?= RemoteGroup) \
+-        && ($(StateTimer) > (1 * $(HOUR))) \
+-	&& (RemoteUserPrio > TARGET.SubmitterUserPrio * 1.2)) \
+-        || (MY.NiceUser == True)
++UWCS_PREEMPTION_REQUIREMENTS = ( $(StateTimer) > (1 * $(HOUR)) && \
++	RemoteUserPrio > TARGET.SubmitterUserPrio * 1.2 ) || (MY.NiceUser == True)
+ 
+ ##  The PREEMPTION_RANK expression is used in a case where preemption
+ ##  is the only option and all other negotiation ranks are equal.  For
+@@ -934,14 +933,16 @@ TESTINGMODE_CLAIM_WORKLIFE = 1200
+ ######################################################################
+ 
+ ##  Pathnames
+-LOG		= $(LOCAL_DIR)/log
+-SPOOL		= $(LOCAL_DIR)/spool
+-EXECUTE		= $(LOCAL_DIR)/execute
++RUN		= $(LOCAL_DIR)/run/condor
++LOG		= $(LOCAL_DIR)/log/condor
++SPOOL		= $(LOCAL_DIR)/lib/condor/spool
++EXECUTE		= $(LOCAL_DIR)/lib/condor/execute
+ BIN		= $(RELEASE_DIR)/bin
+-LIB		= $(RELEASE_DIR)/lib
+-INCLUDE		= $(RELEASE_DIR)/include
++LIB		= $(RELEASE_DIR)/lib64/condor
++INCLUDE		= $(RELEASE_DIR)/include/condor
+ SBIN		= $(RELEASE_DIR)/sbin
+-LIBEXEC		= $(RELEASE_DIR)/libexec
++LIBEXEC		= $(RELEASE_DIR)/libexec/condor
++SHARE		= $(RELEASE_DIR)/share/condor 
+ 
+ ## If you leave HISTORY undefined (comment it out), no history file
+ ## will be created. 
+@@ -970,7 +971,7 @@ HDFS_LOG	= $(LOG)/HDFSLog
+ SHADOW_LOCK	= $(LOCK)/ShadowLock
+ 
+ ## This setting controls how often any lock files currently in use have their
+-## time stamp updated. Updating the time stamp prevents administrative programs 
++## timestamp updated. Updating the timestamp prevents administrative programs 
+ ## like 'tmpwatch' from deleting long lived lock files. The parameter is
+ ## an integer in seconds with a minimum of 60 seconds. The default if not
+ ## specified is 28800 seconds, or 8 hours.
+@@ -1024,13 +1025,13 @@ RESERVED_DISK		= 5
+ ##  user@UID_DOMAIN won't work.
+ #EMAIL_DOMAIN = $(FULL_HOSTNAME)
+ 
+-##  Should Condor daemons create a UDP command socket (for incoming
++##  Should Condor daemons create a UDP command socket (for incomming
+ ##  UDP-based commands) in addition to the TCP command socket?  By
+ ##  default, classified ad updates sent to the collector use UDP, in
+ ##  addition to some keep alive messages and other non-essential
+ ##  communication.  However, in certain situations, it might be
+ ##  desirable to disable the UDP command port (for example, to reduce
+-##  the number of ports represented by a CCB broker, etc).  If not
++##  the number of ports represented by a GCB broker, etc).  If not
+ ##  defined, the UDP command socket is enabled by default, and to
+ ##  modify this, you must restart your Condor daemons. Also, this
+ ##  setting must be defined machine-wide.  For example, setting
+@@ -1064,8 +1065,8 @@ RESERVED_DISK		= 5
+ #HIGHPORT = 9700 
+ #LOWPORT = 9600
+ 
+-##  If a daemon doesn't respond for too long, do you want go generate
+-##  a core file?  This basically controls the type of the signal
++##  If a daemon doens't respond for too long, do you want go generate
++##  a core file?  This bascially controls the type of the signal
+ ##  sent to the child process, and mostly affects the Condor Master
+ #NOT_RESPONDING_WANT_CORE	= False
+ 
+@@ -1085,8 +1086,7 @@ DAEMON_LIST			= MASTER, STARTD, SCHEDD
+ #DC_DAEMON_LIST = \
+ #MASTER, STARTD, SCHEDD, KBDD, COLLECTOR, NEGOTIATOR, EVENTD, \
+ #VIEW_SERVER, CONDOR_VIEW, VIEW_COLLECTOR, HAWKEYE, CREDD, HAD, \
+-#DBMSD, QUILL, JOB_ROUTER, ROOSTER, LEASEMANAGER, HDFS, SHARED_PORT, \
+-#DEFRAG
++#DBMSD, QUILL, JOB_ROUTER, ROOSTER, LEASEMANAGER, HDFS, SHARED_PORT
+ 
+ 
+ ##  Where are the binaries for these daemons?
+@@ -1096,14 +1096,12 @@ SCHEDD				= $(SBIN)/condor_schedd
+ KBDD				= $(SBIN)/condor_kbdd
+ NEGOTIATOR			= $(SBIN)/condor_negotiator
+ COLLECTOR			= $(SBIN)/condor_collector
+-CKPT_SERVER			= $(SBIN)/condor_ckpt_server
+ STARTER_LOCAL			= $(SBIN)/condor_starter
+ JOB_ROUTER                      = $(LIBEXEC)/condor_job_router
+ ROOSTER                         = $(LIBEXEC)/condor_rooster
+ HDFS				= $(SBIN)/condor_hdfs
+ SHARED_PORT			= $(LIBEXEC)/condor_shared_port
+ TRANSFERER			= $(LIBEXEC)/condor_transferer
+-DEFRAG                          = $(LIBEXEC)/condor_defrag
+ 
+ ##  When the master starts up, it can place it's address (IP and port)
+ ##  into a file.  This way, tools running on the local machine don't
+@@ -1142,7 +1140,7 @@ PREEN_ARGS			= -m -r
+ ##  manager? 
+ #MASTER_UPDATE_INTERVAL		= 300
+ 
+-##  How often do you want the master to check the time stamps of the
++##  How often do you want the master to check the timestamps of the
+ ##  daemons it's running?  If any daemons have been modified, the
+ ##  master restarts them.
+ #MASTER_CHECK_NEW_EXEC_INTERVAL	= 300
+@@ -1156,9 +1154,9 @@ PREEN_ARGS			= -m -r
+ #SHUTDOWN_FAST_TIMEOUT		= 120
+ 
+ ######
+-##  Exponential back off settings:
++##  Exponential backoff settings:
+ ######
+-##  When a daemon keeps crashing, we use "exponential back off" so we
++##  When a daemon keeps crashing, we use "exponential backoff" so we
+ ##  wait longer and longer before restarting it.  This is the base of
+ ##  the exponent used to determine how long to wait before starting
+ ##  the daemon again:
+@@ -1171,7 +1169,7 @@ PREEN_ARGS			= -m -r
+ 
+ ##  How long should a daemon run without crashing before we consider
+ ##  it "recovered".  Once a daemon has recovered, we reset the number
+-##  of restarts so the exponential back off stuff goes back to normal. 
++##  of restarts so the exponential backoff stuff goes back to normal. 
+ #MASTER_RECOVER_FACTOR		= 300
+ 
+ 
+@@ -1186,14 +1184,6 @@ PREEN_ARGS			= -m -r
+ ## your pool.
+ #CONDOR_DEVELOPERS_COLLECTOR = condor.cs.wisc.edu
+ 
+-##  When the collector starts up, it can place it's address (IP and port)
+-##  into a file.  This way, tools running on the local machine don't
+-##  need to query the central manager to find the collector.  This
+-##  feature can be turned off by commenting out this setting.
+-##  This is essential when using a port of "0" (automatic) for the
+-##  COLLECTOR_HOST, a useful technique for personal Condor installs.
+-COLLECTOR_ADDRESS_FILE = $(LOG)/.collector_address
+-
+ 
+ ##--------------------------------------------------------------------
+ ##  condor_negotiator
+@@ -1668,7 +1658,7 @@ QUEUE_SUPER_USERS	= root, condor
+ ##  condor_rmdir.exe is a windows-only command that does a better job
+ ##  than the built-in rmdir command when it is run with elevated privileges
+ ##  Such as when when Condor is running as a service.
+-##   /s is delete sub-directories
++##   /s is delete subdirectories
+ ##   /c is continue on error
+ WINDOWS_RMDIR = $(SBIN)\condor_rmdir.exe
+ #WINDOWS_RMDIR_OPTIONS = /s /c
+@@ -1691,13 +1681,15 @@ PROCD = $(SBIN)/condor_procd
+ #     UNIX); the name will be something like:
+ #         \\.\pipe\condor_procd
+ #
+-PROCD_ADDRESS = $(LOCK)/procd_pipe
++PROCD_ADDRESS = $(RUN)/procd_pipe
+ 
+-# Note that in other Condor daemons, turning on D_PROCFAMILY will
+-# result in that daemon logging all of its interactions with the
+-# ProcD.
++# The procd currently uses a very simplistic logging system. Since this
++# log will not be rotated like other Condor logs, it is only recommended
++# to set PROCD_LOG when attempting to debug a problem. In other Condor
++# daemons, turning on D_PROCFAMILY will result in that daemon logging
++# all of its interactions with the ProcD.
+ #
+-PROCD_LOG = $(LOG)/ProcLog
++#PROCD_LOG = $(LOG)/ProcLog
+ 
+ # This is the maximum period that the procd will use for taking
+ # snapshots (the actual period may be lower if a condor daemon registers
+@@ -1822,14 +1814,14 @@ JAVA_EXTRA_ARGUMENTS =
+ 
+ GRIDMANAGER			= $(SBIN)/condor_gridmanager
+ GT2_GAHP			= $(SBIN)/gahp_server
+-GRID_MONITOR			= $(SBIN)/grid_monitor
++GRID_MONITOR			= $(SBIN)/grid_monitor.sh
+ 
+ ##--------------------------------------------------------------------
+ ##  Settings that control the daemon's debugging output:
+ ##--------------------------------------------------------------------
+ ##
+ ## Note that the Gridmanager runs as the User, not a Condor daemon, so 
+-## all users must have write permission to the directory that the 
++## all users must have write permssion to the directory that the 
+ ## Gridmanager will use for it's logfile. Our suggestion is to create a
+ ## directory called GridLogs in $(LOG) with UNIX permissions 1777 
+ ## (just like /tmp )
+@@ -1846,14 +1838,6 @@ GRIDMANAGER_LOCK = $(LOCK)/GridmanagerLo
+ ##  Various other settings that the Condor-G can use. 
+ ##--------------------------------------------------------------------
+ 
+-## The number of seconds between status update requests. You can make 
+-## this short (5 seconds) if you want Condor to respond quickly to 
+-## instances as they terminate, or you can make it long (300 seconds = 5 
+-## minutes) if you know your instances will run for awhile and don't 
+-## mind delay between when they stop and when Condor responds to them 
+-## stopping.
+-GRIDMANAGER_JOB_PROBE_INTERVAL = 300
+-
+ ## For grid-type gt2 jobs (pre-WS GRAM), limit the number of jobmanager
+ ## processes the gridmanager will let run on the headnode. Letting too
+ ## many jobmanagers run causes severe load on the headnode.
+@@ -1874,7 +1858,7 @@ GRIDMANAGER_MAX_JOBMANAGERS_PER_RESOURCE
+ ## Condor requires that each submitted job be designated to run under a
+ ## particular "universe". 
+ ##
+-## If no universe is specified in the submit file, Condor must pick one
++## If no universe is specificed in the submit file, Condor must pick one
+ ## for the job to use. By default, it chooses the "vanilla" universe. 
+ ## The default can be overridden in the config file with the DEFAULT_UNIVERSE
+ ## setting, which is a string to insert into a job submit description if the
+@@ -1912,9 +1896,9 @@ CONDOR_GAHP = $(SBIN)/condor_c-gahp
+ CONDOR_GAHP_WORKER = $(SBIN)/condor_c-gahp_worker_thread
+ 
+ ##
+-## The Condor GAHP server has its own log.  Like the Gridmanager, the
++## The Condor GAHP server has it's own log.  Like the Gridmanager, the
+ ## GAHP server is run as the User, not a Condor daemon, so all users must 
+-## have write permission to the directory used for the logfile. Our 
++## have write permssion to the directory used for the logfile. Our 
+ ## suggestion is to create a directory called GridLogs in $(LOG) with 
+ ## UNIX permissions 1777 (just like /tmp )
+ ## Another option is to use /tmp as the location of the CGAHP log.
+@@ -1928,10 +1912,45 @@ C_GAHP_WORKER_THREAD_LOG = /tmp/CGAHPWor
+ C_GAHP_WORKER_THREAD_LOCK = /tmp/CGAHPWorkerLock.$(USERNAME)
+ 
+ ##
++## The location of the wrapper for invoking
++## GT4 GAHP server
++##
++GT4_GAHP = $(SBIN)/gt4_gahp
++
++##
++## The location of GT4 files. This should normally be lib/gt4
++##
++GT4_LOCATION = $(LIB)/gt4
++
++##
++## The location of the wrapper for invoking
++## GT4 GAHP server
++##
++GT42_GAHP = $(SBIN)/gt42_gahp
++
++##
++## The location of GT4 files. This should normally be lib/gt4
++##
++GT42_LOCATION = $(LIB)/gt42
++
++##
++## gt4 gram requires a gridftp server to perform file transfers.
++## If GRIDFTP_URL_BASE is set, then Condor assumes there is a gridftp
++## server set up at that URL suitable for its use. Otherwise, Condor
++## will start its own gridftp servers as needed, using the binary
++## pointed at by GRIDFTP_SERVER. GRIDFTP_SERVER_WRAPPER points to a
++## wrapper script needed to properly set the path to the gridmap file.
++##
++#GRIDFTP_URL_BASE = gsiftp://$(FULL_HOSTNAME)
++GRIDFTP_SERVER = $(LIBEXEC)/globus-gridftp-server
++GRIDFTP_SERVER_WRAPPER = $(LIBEXEC)/gridftp_wrapper.sh
++
++##
+ ## Location of the PBS/LSF gahp and its associated binaries
+ ##
+ GLITE_LOCATION = $(LIBEXEC)/glite
+-BATCH_GAHP = $(GLITE_LOCATION)/bin/batch_gahp
++PBS_GAHP = $(GLITE_LOCATION)/bin/batch_gahp
++LSF_GAHP = $(GLITE_LOCATION)/bin/batch_gahp
+ 
+ ##
+ ## The location of the wrapper for invoking the Unicore GAHP server
+@@ -1954,25 +1973,33 @@ CREAM_GAHP = $(SBIN)/cream_gahp
+ DELTACLOUD_GAHP = $(SBIN)/deltacloud_gahp
+ 
+ ##
+-## EC2 (REST): Universe = Grid, Grid_Resource = ec2
++## EC2: Universe = Grid, Grid_Resource = Amazon
+ ##
+ 
+-## The location of the ec2_gahp program, required
+-EC2_GAHP = $(SBIN)/ec2_gahp
++## The location of the amazon_gahp program, required
++AMAZON_GAHP = $(SBIN)/amazon_gahp
+ 
+ ## Location of log files, useful for debugging, must be in
+ ## a directory writable by any user, such as /tmp
+-#EC2_GAHP_DEBUG = D_FULLDEBUG
+-EC2_GAHP_LOG = /tmp/EC2GahpLog.$(USERNAME)
++#AMAZON_GAHP_DEBUG = D_FULLDEBUG
++AMAZON_GAHP_LOG = /tmp/AmazonGahpLog.$(USERNAME)
+ 
+-## As of this writing EC2 has a hard limit of 20 concurrently
++## The number of seconds between status update requests to EC2. You can
++## make this short (5 seconds) if you want Condor to respond quickly to
++## instances as they terminate, or you can make it long (300 seconds = 5
++## minutes) if you know your instances will run for awhile and don't mind
++## delay between when they stop and when Condor responds to them
++## stopping.
++GRIDMANAGER_JOB_PROBE_INTERVAL = 300
++
++## As of this writing Amazon EC2 has a hard limit of 20 concurrently
+ ## running instances, so a limit of 20 is imposed so the GridManager
+ ## does not waste its time sending requests that will be rejected.
+-GRIDMANAGER_MAX_SUBMITTED_JOBS_PER_RESOURCE_EC2 = 20
++GRIDMANAGER_MAX_SUBMITTED_JOBS_PER_RESOURCE_AMAZON = 20
+ 
+ ##
+ ##--------------------------------------------------------------------
+-##  condor_credd credential management daemon
++##  condor_credd credential managment daemon
+ ##--------------------------------------------------------------------
+ ##  Where is the CredD binary installed?
+ CREDD				= $(SBIN)/condor_credd
+@@ -2022,7 +2049,7 @@ CRED_STORE_DIR = $(LOCAL_DIR)/cred_dir
+ 
+ ##
+ ##--------------------------------------------------------------------
+-##  Stork data placement server
++##  Stork data placment server
+ ##--------------------------------------------------------------------
+ ##  Where is the Stork binary installed?
+ STORK				= $(SBIN)/stork_server
+@@ -2099,7 +2126,7 @@ QUILL_LOG = $(LOG)/QuillLog
+ QUILL_ADDRESS_FILE = $(LOG)/.quill_address
+ 
+ # If this is set to true, then the rest of the QUILL arguments must be defined
+-# for quill to function. If it is False or left undefined, then quill will not
++# for quill to function. If it is Fase or left undefined, then quill will not
+ # be consulted by either the scheduler or the tools, but in the case of a 
+ # remote quill query where the local client has quill turned off, but the
+ # remote client has quill turned on, things will still function normally.
+@@ -2126,7 +2153,7 @@ QUILL_ADDRESS_FILE = $(LOG)/.quill_addre
+ # be the username associated with this instance of the quill daemon mirroring
+ # a schedd's job queue. Each quill daemon must have a unique username 
+ # associated with it otherwise multiple quill daemons will corrupt the data
+-# held under an identical user name.
++# held under an indentical user name.
+ #QUILL_DB_NAME = name_of_db
+ 
+ # The required password for the DB user which quill will use to read 
+@@ -2160,7 +2187,7 @@ QUILL_ADDRESS_FILE = $(LOG)/.quill_addre
+ 
+ # Number of seconds the master should wait for the Quill daemon to respond 
+ # before killing it. This number might need to be increased for very 
+-# large logfiles.
++# large  logfiles.
+ # The default is 3600 (one hour), but kicking it up to a few hours won't hurt
+ #QUILL_NOT_RESPONDING_TIMEOUT = 3600
+ 
+@@ -2231,8 +2258,8 @@ MAX_VM_GAHP_LOG	= 1000000
+ 
+ ## What kind of virtual machine program will be used for 
+ ## the VM universe?
+-## The three primary options are KVM, Xen and VMware.  (Required: no default)
+-#VM_TYPE = kvm
++## The two options are vmware and xen.  (Required)
++#VM_TYPE = vmware
+ 
+ ## How much memory can be used for the VM universe? (Required)
+ ## This value is the maximum amount of memory that can be used by the 
+@@ -2276,7 +2303,7 @@ MAX_VM_GAHP_LOG	= 1000000
+ ## How long will we wait for a request sent to the VM-GAHP to be completed?
+ ## If a request is not completed within the timeout, an error will be reported 
+ ## to the startd, and then the startd will check 
+-## the availability of vm universe.  Default value is 5 minutes.
++## the availability of vm universe.  Default value is 5 mins.
+ #VM_GAHP_REQ_TIMEOUT = 300
+ 
+ ## When VMware or Xen causes an error, the startd will disable the
+@@ -2325,7 +2352,7 @@ MAX_VM_GAHP_LOG	= 1000000
+ VMWARE_PERL = perl
+ 
+ ## Where is the Condor script program to control VMware? (Required)
+-VMWARE_SCRIPT = $(SBIN)/condor_vm_vmware
++VMWARE_SCRIPT = $(SBIN)/condor_vm_vmware.pl
+ 
+ ## Networking parameters for VMware
+ ##
+@@ -2444,11 +2471,11 @@ KBDD_ADDRESS_FILE = $(LOG)/.kbdd_address
+ # %u --> remote user
+ # %x --> proxy command
+ # %% --> %
+-#SSH_TO_JOB_SSH_CMD = "ssh -oUser=%u -oIdentityFile=%i -oStrictHostKeyChecking=yes -oUserKnownHostsFile=%k -oGlobalKnownHostsFile=%k -oProxyCommand=%x %h"
++#SSH_TO_JOB_SSH_CMD = ssh -oUser=%u -oIdentityFile=%i -oStrictHostKeyChecking=yes -oUserKnownHostsFile=%k -oGlobalKnownHostsFile=%k -oProxyCommand=%x %h
+ 
+ # Additional ssh clients may be configured.  They all have the same
+ # default as ssh, except for scp, which omits the %h:
+-#SSH_TO_JOB_SCP_CMD = "scp -oUser=%u -oIdentityFile=%i -oStrictHostKeyChecking=yes -oUserKnownHostsFile=%k -oGlobalKnownHostsFile=%k -oProxyCommand=%x"
++#SSH_TO_JOB_SCP_CMD = scp -oUser=%u -oIdentityFile=%i -oStrictHostKeyChecking=yes -oUserKnownHostsFile=%k -oGlobalKnownHostsFile=%k -oProxyCommand=%x
+ 
+ # Path to sshd
+ #SSH_TO_JOB_SSHD = /usr/sbin/sshd
+@@ -2475,7 +2502,7 @@ KBDD_ADDRESS_FILE = $(LOG)/.kbdd_address
+ ##
+ ##  This is the default local configuration file for configuring Condor
+ ##  daemon responsible for running services related to hadoop 
+-##  distributed storage system.  You should copy this file to the
++##  distributed storage system.You should copy this file to the
+ ##  appropriate location and customize it for your needs.  
+ ##
+ ##  Unless otherwise specified, settings that are commented out show
+@@ -2510,7 +2537,7 @@ HDFS_BACKUPNODE_WEB = example.com:50105
+ HDFS_NODETYPE = HDFS_DATANODE
+ 
+ ## If machine is selected to be NameNode then by a role should defined.
+-## If it selected to be DataNode then this parameter is ignored.
++## If it selected to be DataNode then this paramer is ignored.
+ ## Available options:
+ ## ACTIVE: Active NameNode role (default value)
+ ## BACKUP: Always synchronized with the active NameNode state, thus 
+@@ -2558,11 +2585,3 @@ HDFS_DATANODE_DIR = /scratch/tmp/hadoop_
+ 
+ ## In case an old name for hdfs configuration files is required.
+ #HDFS_SITE_FILE = hdfs-site.xml
+-
+-
+-##
+-##--------------------------------------------------------------------
+-##  file transfer plugin defaults
+-##--------------------------------------------------------------------
+-FILETRANSFER_PLUGINS = $(LIBEXEC)/curl_plugin, $(LIBEXEC)/data_plugin
+-

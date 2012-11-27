@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
 # We need the following in order to use Condor SOAP:
 # 1. yum install python-suds 
@@ -123,4 +124,4 @@ condor_schedd.service.requestReschedule();
 #res = condor_schedd.service.closeSpool(transaction, clusterId, jobId)
 print result
 
-
+# vim: ts=4:et:sw=4:tw=80:sts=4:cc=80

@@ -15,7 +15,7 @@
 
 package org.openlmi.openlmipower;
 
-import org.openlmi.openlmipower.CuraPowerClient;
+import org.openlmi.openlmipower.OpenLMIPowerClient;
 import org.openlmi.openlmioptions.OpenLMIBasicOptions;
 import java.lang.reflect.*;
 import java.util.*;

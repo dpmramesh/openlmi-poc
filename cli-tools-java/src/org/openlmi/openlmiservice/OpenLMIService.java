@@ -15,7 +15,7 @@
 
 package org.openlmi.openlmiservice;
 
-import org.openlmi.openlmiservice.CuraServiceClient;
+import org.openlmi.openlmiservice.OpenLMIServiceClient;
 import org.openlmi.openlmioptions.OpenLMIBasicOptions;
 import java.lang.reflect.*;
 import java.util.*;

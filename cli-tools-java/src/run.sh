@@ -1,11 +1,11 @@
 #!/bin/bash
 
-CURAJAR=../build/src/CuraCli.jar
+CURAJAR=../build/src/OpenLMICli.jar
 SBLIMJAR=/usr/share/java/sblim-cim-client2.jar
 ARGSJAR=/usr/share/java/args4j.jar
 
 usage(){
-	echo "Usage: $0 [OpenLMIPower|OpenLMIService|OpenLMIUser" 
+	echo "Usage: $0 [OpenLMIPower|OpenLMIService|OpenLMIUser|OpenLMIStorage"
 	exit 1
 }
 

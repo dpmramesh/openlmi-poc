@@ -34,6 +34,7 @@ import javax.wbem.WBEMException;
 import javax.wbem.client.WBEMClient;
 import javax.wbem.client.WBEMClientFactory;
 import javax.wbem.client.UserPrincipal;
+import javax.wbem.client.PasswordCredential;
 import javax.wbem.CloseableIterator;
 import javax.wbem.listener.IndicationListener;
 
@@ -53,7 +54,8 @@ class OpenLMIServiceClient {
         try {
             cli = WBEMClientFactory.getClient("CIM-XML");
             Subject subject = new Subject();
-
+            subject.getPrincipals().add(new UserPrincipal(username));
+	    subject.getPrivateCredentials().add(new PasswordCredential(password));
             cop = new CIMObjectPath("https", 
                                 hostname, 
                                 "5989", 

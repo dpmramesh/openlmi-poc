@@ -8,6 +8,8 @@ set(SRC
     org/openlmi/openlmiservice/OpenLMIServiceClient.java
     org/openlmi/openlmipower/OpenLMIPower.java
     org/openlmi/openlmipower/OpenLMIPowerClient.java
+    org/openlmi/openlmistorage/OpenLMIStorageClient.java
+    org/openlmi/openlmistorage/OpenLMIStorage.java
 )
 
 add_jar(OpenLMICli ${SRC})

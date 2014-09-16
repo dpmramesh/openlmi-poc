@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CURAJAR=../build/src/CuraCli.jar
+CURAJAR=../build/src/OpenLMICli.jar
 SBLIMJAR=/usr/share/java/sblim-cim-client2.jar
 ARGSJAR=/usr/share/java/args4j.jar
 
